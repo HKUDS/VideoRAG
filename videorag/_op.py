@@ -183,8 +183,8 @@ async def _handle_entity_relation_summary(
     description: str,
     global_config: dict,
 ) -> str:
-    use_llm_func: callable = global_config["cheap_model_func"]
-    llm_max_tokens = global_config["cheap_model_max_token_size"]
+    use_llm_func: callable = global_config["llm"]["cheap_model_func"]
+    llm_max_tokens = global_config["llm"]["cheap_model_max_token_size"]
     tiktoken_model_name = global_config["tiktoken_model_name"]
     summary_max_tokens = global_config["entity_summary_to_max_tokens"]
 
@@ -359,7 +359,7 @@ async def extract_entities(
     entity_vdb: BaseVectorStorage,
     global_config: dict,
 ) -> Union[BaseGraphStorage, None]:
-    use_llm_func: callable = global_config["best_model_func"]
+    use_llm_func: callable = global_config["llm"]["best_model_func"]
     entity_extract_max_gleaning = global_config["entity_extract_max_gleaning"]
     
     ordered_chunks = list(chunks.items())
@@ -549,7 +549,7 @@ async def _refine_entity_retrieval_query(
     query_param: QueryParam,
     global_config: dict,
 ):
-    use_llm_func: callable = global_config["cheap_model_func"]
+    use_llm_func: callable = global_config["llm"]["cheap_model_func"]
     query_rewrite_prompt = PROMPTS["query_rewrite_for_entity_retrieval"]
     query_rewrite_prompt = query_rewrite_prompt.format(input_text=query)
     final_result = await use_llm_func(query_rewrite_prompt)
@@ -560,7 +560,7 @@ async def _refine_visual_retrieval_query(
     query_param: QueryParam,
     global_config: dict,
 ):
-    use_llm_func: callable = global_config["cheap_model_func"]
+    use_llm_func: callable = global_config["llm"]["cheap_model_func"]
     query_rewrite_prompt = PROMPTS["query_rewrite_for_visual_retrieval"]
     query_rewrite_prompt = query_rewrite_prompt.format(input_text=query)
     final_result = await use_llm_func(query_rewrite_prompt)
@@ -571,7 +571,7 @@ async def _extract_keywords_query(
     query_param: QueryParam,
     global_config: dict,
 ):
-    use_llm_func: callable = global_config["cheap_model_func"]
+    use_llm_func: callable = global_config["llm"]["cheap_model_func"]
     keywords_prompt = PROMPTS["keywords_extraction"]
     keywords_prompt = keywords_prompt.format(input_text=query)
     final_result = await use_llm_func(keywords_prompt)
@@ -591,7 +591,7 @@ async def videorag_query(
     query_param: QueryParam,
     global_config: dict,
 ) -> str:
-    use_model_func = global_config["best_model_func"]
+    use_model_func = global_config["llm"]["best_model_func"]
     query = query
     
     # naive chunks

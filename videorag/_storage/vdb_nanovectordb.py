@@ -21,7 +21,7 @@ class NanoVectorDBStorage(BaseVectorStorage):
         self._client_file_name = os.path.join(
             self.global_config["working_dir"], f"vdb_{self.namespace}.json"
         )
-        self._max_batch_size = self.global_config["embedding_batch_num"]
+        self._max_batch_size = self.global_config["llm"]["embedding_batch_num"]
         self._client = NanoVectorDB(
             self.embedding_func.embedding_dim, storage_file=self._client_file_name
         )

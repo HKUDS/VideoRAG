@@ -13,12 +13,10 @@ import tiktoken
 
 
 from ._llm import (
-    gpt_4o_complete,
-    gpt_4o_mini_complete,
-    openai_embedding,
-    azure_gpt_4o_complete,
-    azure_openai_embedding,
-    azure_gpt_4o_mini_complete,
+    LLMConfig,
+    openai_config,
+    azure_openai_config,
+    ollama_config
 )
 from ._op import (
     chunking_by_video_segments,
@@ -36,6 +34,7 @@ from ._utils import (
     EmbeddingFunc,
     compute_mdhash_id,
     limit_async_func_call,
+    wrap_embedding_func_with_attrs,
     convert_response_to_json,
     always_get_an_event_loop,
     logger,
@@ -98,21 +97,9 @@ class VideoRAG:
     entity_extract_max_gleaning: int = 1
     entity_summary_to_max_tokens: int = 500
 
-    # text embedding
-    embedding_func: EmbeddingFunc = field(default_factory=lambda: openai_embedding)
-    embedding_batch_num: int = 32
-    embedding_func_max_async: int = 16
-    query_better_than_threshold: float = 0.2
-
-    # LLM
-    using_azure_openai: bool = False
-    best_model_func: callable = gpt_4o_mini_complete
-    best_model_max_token_size: int = 32768
-    best_model_max_async: int = 16
-    cheap_model_func: callable = gpt_4o_mini_complete
-    cheap_model_max_token_size: int = 32768
-    cheap_model_max_async: int = 16
-
+    # Change to your LLM provider
+    llm: LLMConfig = field(default_factory=openai_config)
+    
     # entity extraction
     entity_extraction_func: callable = extract_entities
     
@@ -143,18 +130,6 @@ class VideoRAG:
         _print_config = ",\n  ".join([f"{k} = {v}" for k, v in asdict(self).items()])
         logger.debug(f"VideoRAG init with param:\n\n  {_print_config}\n")
         
-        if self.using_azure_openai:
-            # If there's no OpenAI API key, use Azure OpenAI
-            if self.best_model_func == gpt_4o_complete:
-                self.best_model_func = azure_gpt_4o_complete
-            if self.cheap_model_func == gpt_4o_mini_complete:
-                self.cheap_model_func = azure_gpt_4o_mini_complete
-            if self.embedding_func == openai_embedding:
-                self.embedding_func = azure_openai_embedding
-            logger.info(
-                "Switched the default openai funcs to Azure OpenAI if you didn't set any of it"
-            )
-
         if not os.path.exists(self.working_dir) and self.always_create_working_dir:
             logger.info(f"Creating working directory {self.working_dir}")
             os.makedirs(self.working_dir)
@@ -183,9 +158,10 @@ class VideoRAG:
             namespace="chunk_entity_relation", global_config=asdict(self)
         )
 
-        self.embedding_func = limit_async_func_call(self.embedding_func_max_async)(
-            self.embedding_func
-        )
+        self.embedding_func = limit_async_func_call(self.llm.embedding_func_max_async)(wrap_embedding_func_with_attrs(
+                embedding_dim = self.llm.embedding_dim,
+                max_token_size = self.llm.embedding_max_token_size,
+                model_name = self.llm.embedding_model_name)(self.llm.embedding_func))
         self.entities_vdb = (
             self.vector_db_storage_cls(
                 namespace="entities",
@@ -214,11 +190,11 @@ class VideoRAG:
             )
         )
         
-        self.best_model_func = limit_async_func_call(self.best_model_max_async)(
-            partial(self.best_model_func, hashing_kv=self.llm_response_cache)
+        self.best_model_func = limit_async_func_call(self.llm.best_model_max_async)(
+            partial(self.llm.best_model_func, hashing_kv=self.llm_response_cache)
         )
-        self.cheap_model_func = limit_async_func_call(self.cheap_model_max_async)(
-            partial(self.cheap_model_func, hashing_kv=self.llm_response_cache)
+        self.cheap_model_func = limit_async_func_call(self.llm.cheap_model_max_async)(
+            partial(self.llm.cheap_model_func, hashing_kv=self.llm_response_cache)
         )
 
     def insert_video(self, video_path_list=None):

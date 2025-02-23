@@ -244,6 +244,43 @@ python batch_winrate_quant_download.py
 python batch_winrate_quant_calculate.py
 ```
 
+### Ollama Support
+
+This project also supports ollama.  To use, edit the ollama_config in _llm.py.
+Adjust the paramters of the models being used
+
+```
+ollama_config = LLMConfig(
+    embedding_func_raw = ollama_embedding,
+    embedding_model_name = "nomic-embed-text",
+    embedding_dim = 768,
+    embedding_max_token_size=8192,
+    embedding_batch_num = 1,
+    embedding_func_max_async = 1,
+    query_better_than_threshold = 0.2,
+    best_model_func_raw = ollama_complete ,
+    best_model_name = "gemma2:latest", # need to be a solid instruct model
+    best_model_max_token_size = 32768,
+    best_model_max_async  = 1,
+    cheap_model_func_raw = ollama_mini_complete,
+    cheap_model_name = "olmo2",
+    cheap_model_max_token_size = 32768,
+    cheap_model_max_async = 1)
+```
+And specify the config when creating your VideoRag instance
+
+### Jupyter Notebook
+
+To  test the solution on a single video, just load the notebook in the notebook folder and
+update the paramters to fit your situation.
+
+YouTube video for example can be downloaded as
+
+```
+yt-dlp -o "%(id)s.%(ext)s" -S "res:720" https://www.youtube.com/live/DPa2iRgzadM?si=8cf8WbYtqiglrwtN  -P .
+```
+
+
 ## Citation
 If you find this work is helpful to your research, please consider citing our paper:
 ```bibtex

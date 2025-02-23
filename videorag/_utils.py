@@ -154,10 +154,23 @@ def clean_str(input: Any) -> str:
 class EmbeddingFunc:
     embedding_dim: int
     max_token_size: int
+    model_name: str
     func: callable
 
     async def __call__(self, *args, **kwargs) -> np.ndarray:
-        return await self.func(*args, **kwargs)
+        # Had to fix this as the embedding function took only one named argument put it's passed in
+        # positionally, now we need to pass both
+        kwargs['model_name'] = self.model_name
+        
+        # If there are positional arguments, convert them to keyword arguments
+        if args:
+            # Assuming the first positional argument is always 'texts'
+            if len(args) == 1 and isinstance(args[0], list):
+                kwargs['texts'] = args[0]
+            else:
+                raise ValueError("Unexpected positional arguments. Expected a single list of texts")
+        # Call the function with the updated keyword arguments
+        return await self.func(**kwargs)        
 
 
 # Decorators ------------------------------------------------------------------------
