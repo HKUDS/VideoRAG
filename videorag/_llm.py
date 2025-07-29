@@ -387,3 +387,115 @@ ollama_config = LLMConfig(
     cheap_model_max_token_size = 32768,
     cheap_model_max_async = 1
 )
+
+###### DeepSeek Configuration
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=4, max=10),
+    retry=retry_if_exception_type((RateLimitError, APIConnectionError)),
+)
+async def deepseek_complete_if_cache(
+    model, prompt, system_prompt=None, history_messages=[], **kwargs
+) -> str:
+    # 使用DeepSeek API
+    import httpx
+    
+    hashing_kv: BaseKVStorage = kwargs.pop("hashing_kv", None)
+    messages = []
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
+    messages.extend(history_messages)
+    messages.append({"role": "user", "content": prompt})
+
+    if hashing_kv is not None:
+        args_hash = compute_args_hash(model, messages)
+        if_cache_return = await hashing_kv.get_by_id(args_hash)
+        if if_cache_return is not None and if_cache_return["return"] is not None:
+            return if_cache_return["return"]
+
+    # DeepSeek API调用
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            "https://api.deepseek.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {os.environ.get('DEEPSEEK_API_KEY', 'sk-754fd2769599437fa9864b8d39abfb9a')}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": model,
+                "messages": messages,
+                "temperature": kwargs.get("temperature", 0.7),
+                "max_tokens": kwargs.get("max_tokens", 4096)
+            },
+            timeout=60.0
+        )
+        response.raise_for_status()
+        result = response.json()
+        content = result["choices"][0]["message"]["content"]
+
+    if hashing_kv is not None:
+        await hashing_kv.upsert(
+            {args_hash: {"return": content, "model": model}}
+        )
+        await hashing_kv.index_done_callback()
+
+    return content
+
+async def deepseek_complete(model_name, prompt, system_prompt=None, history_messages=[], **kwargs) -> str:
+    return await deepseek_complete_if_cache(
+        model_name,
+        prompt,
+        system_prompt=system_prompt,
+        history_messages=history_messages,
+        **kwargs
+    )
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=4, max=10),
+    retry=retry_if_exception_type((RateLimitError, APIConnectionError)),
+)
+async def bge_m3_embedding(model_name: str, texts: list[str]) -> np.ndarray:
+    # 使用硅基流动的BAAI/bge-m3嵌入模型
+    import httpx
+    
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            "https://api.siliconflow.cn/v1/embeddings",
+            headers={
+                "Authorization": f"Bearer {os.environ.get('SILICONFLOW_API_KEY', 'sk-scikawepyxnkazdhkogmgxypnkcmyxqtutrkkpxfnhcfbgnn')}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "BAAI/bge-m3",
+                "input": texts,
+                "encoding_format": "float"
+            },
+            timeout=60.0
+        )
+        response.raise_for_status()
+        result = response.json()
+        embeddings = [item["embedding"] for item in result["data"]]
+        return np.array(embeddings)
+
+# DeepSeek + BAAI/bge-m3 配置
+deepseek_bge_config = LLMConfig(
+    embedding_func_raw = bge_m3_embedding,
+    embedding_model_name = "BAAI/bge-m3",
+    embedding_dim = 1024,  # bge-m3的嵌入维度
+    embedding_max_token_size = 8192,
+    embedding_batch_num = 32,
+    embedding_func_max_async = 16,
+    query_better_than_threshold = 0.2,
+    
+    best_model_func_raw = deepseek_complete,
+    best_model_name = "deepseek-chat",    
+    best_model_max_token_size = 32768,
+    best_model_max_async = 16,
+    
+    cheap_model_func_raw = deepseek_complete,
+    cheap_model_name = "deepseek-chat",
+    cheap_model_max_token_size = 32768,
+    cheap_model_max_async = 16
+)
+
