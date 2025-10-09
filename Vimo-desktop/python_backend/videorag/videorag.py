@@ -309,91 +309,99 @@ class VideoRAG:
         loop = always_get_an_event_loop()
         
         for video_path in video_path_list:
-            # Step0: check the existence
-            video_name = os.path.basename(video_path).split('.')[0]
-            if video_name in self.video_segments._data:
-                logger.info(f"Find the video named {os.path.basename(video_path)} in storage and skip it.")
-                continue
-            
-            loop.run_until_complete(self.video_path_db.upsert(
-                {video_name: video_path}
-            ))
-            
-            # Step1: split the videos
-            if progress_callback:
-                progress_callback("Video Splitting", f"Splitting video into clips for {video_name}...")
-            
-            segment_index2name, segment_times_info = split_video(
-                video_path, 
-                self.working_dir, 
-                self.video_segment_length,
-                self.rough_num_frames_per_segment,
-                self.audio_output_format,
-                self.audio_sample_rate,  # Pass the sample rate
-            )
-            
-            # Step2: obtain transcript with ASR (online)
-            if progress_callback:
-                progress_callback("Audio Processing", f"Performing speech recognition for {video_name}...")
-            
-            transcripts = speech_to_text(
-                video_name, 
-                self.working_dir, 
-                segment_index2name,
-                self.audio_output_format,
-                self.safe_config,  # Pass global config dict
-            )
-            
-            # Step3: saving video segments **as well as** obtain caption with vision language model
-            if progress_callback:
-                progress_callback("Visual Analyzing", f"Analyzing video content for {video_name}...")
-            
-    
-            saving_video_segments(
-                    video_name,
-                    video_path,
-                    self.working_dir,
+            try:
+                # Step0: check the existence
+                video_name = os.path.basename(video_path).split('.')[0]
+                if video_name in self.video_segments._data:
+                    logger.info(f"Find the video named {os.path.basename(video_path)} in storage and skip it.")
+                    continue
+                
+                loop.run_until_complete(self.video_path_db.upsert(
+                    {video_name: video_path}
+                ))
+                
+                # Step1: split the videos
+                if progress_callback:
+                    progress_callback("Video Splitting", f"Splitting video into clips for {video_name}...")
+                
+                segment_index2name, segment_times_info = split_video(
+                    video_path, 
+                    self.working_dir, 
+                    self.video_segment_length,
+                    self.rough_num_frames_per_segment,
+                    self.audio_output_format,
+                    self.audio_sample_rate,  # Pass the sample rate
+                )
+                
+                # Step2: obtain transcript with ASR (online)
+                if progress_callback:
+                    progress_callback("Audio Processing", f"Performing speech recognition for {video_name}...")
+                
+                transcripts = speech_to_text(
+                    video_name, 
+                    self.working_dir, 
+                    segment_index2name,
+                    self.audio_output_format,
+                    self.safe_config,  # Pass global config dict
+                )
+                
+                # Step3: saving video segments **as well as** obtain caption with vision language model
+                if progress_callback:
+                    progress_callback("Visual Analyzing", f"Analyzing video content for {video_name}...")
+                
+        
+                saving_video_segments(
+                        video_name,
+                        video_path,
+                        self.working_dir,
+                        segment_index2name,
+                        segment_times_info,
+                        self.video_output_format,
+                )
+                
+                # Pass the complete safe_config to segment_caption for LLM configuration
+                captions = {}
+                segment_caption(
+                        video_name,
+                        video_path,
+                        segment_index2name,
+                        transcripts,
+                        segment_times_info,
+                        captions,
+                        self.safe_config,
+                )
+
+                segments_information = merge_segment_information(
                     segment_index2name,
                     segment_times_info,
-                    self.video_output_format,
-            )
-            
-            # Pass the complete safe_config to segment_caption for LLM configuration
-            captions = {}
-            segment_caption(
-                    video_name,
-                    video_path,
-                    segment_index2name,
                     transcripts,
-                    segment_times_info,
                     captions,
-                    self.safe_config,
-            )
+                )
+                
+                loop.run_until_complete(self.video_segments.upsert(
+                    {video_name: segments_information}
+                ))
+                
+                # Step4: encode video segment features
+                if progress_callback:
+                    progress_callback("Feature Encoding", f"Encoding video features for {video_name}...")
+                
+                loop.run_until_complete(self.video_segment_feature_vdb.upsert(
+                    video_name,
+                    segment_index2name,
+                    self.video_output_format,
+                ))
 
-            segments_information = merge_segment_information(
-                segment_index2name,
-                segment_times_info,
-                transcripts,
-                captions,
-            )
-            
-            loop.run_until_complete(self.video_segments.upsert(
-                {video_name: segments_information}
-            ))
-            
-            # Step4: encode video segment features
-            if progress_callback:
-                progress_callback("Feature Encoding", f"Encoding video features for {video_name}...")
-            
-            loop.run_until_complete(self.video_segment_feature_vdb.upsert(
-                video_name,
-                segment_index2name,
-                self.video_output_format,
-            ))
-
-            video_segment_cache_path = os.path.join(self.working_dir, '_cache', video_name)
-            if os.path.exists(video_segment_cache_path):
-                shutil.rmtree(video_segment_cache_path)
+                video_segment_cache_path = os.path.join(self.working_dir, '_cache', video_name)
+                if os.path.exists(video_segment_cache_path):
+                    shutil.rmtree(video_segment_cache_path)
+                    
+            except Exception as e:
+                logger.error(f"Failed to process video {video_name}: {str(e)}")
+                if progress_callback:
+                    progress_callback("Error", f"Failed to process video {video_name}: {str(e)}")
+                # Continue processing other videos instead of crashing
+                continue
             
             # Step 5: saving current video information
             if progress_callback:

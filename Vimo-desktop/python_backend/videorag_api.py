@@ -649,19 +649,19 @@ def index_video_worker_process(chat_id, video_path_list, global_config, server_u
             embedding_dim=1536,
             embedding_max_token_size=8192,
             embedding_batch_num=32,
-            embedding_func_max_async=16,
+            embedding_func_max_async=4,
             query_better_than_threshold=0.2,
             best_model_func_raw=gpt_complete,
             best_model_name=global_config.get("analysisModel"),    
             best_model_max_token_size=32768,
-            best_model_max_async=16,
+            best_model_max_async=2,
             cheap_model_func_raw=gpt_complete,
             cheap_model_name=global_config.get("processingModel"),
             cheap_model_max_token_size=32768,
-            cheap_model_max_async=16,
+            cheap_model_max_async=2,
             caption_model_func_raw=dashscope_caption_complete,
             caption_model_name=global_config.get("caption_model"),
-            caption_model_max_async=3
+            caption_model_max_async=1
         )
         
         videorag_instance = VideoRAG(
@@ -770,19 +770,19 @@ def query_worker_process(chat_id, query, global_config, server_url):
             embedding_dim=1536,
             embedding_max_token_size=8192,
             embedding_batch_num=32,
-            embedding_func_max_async=16,
+            embedding_func_max_async=4,
             query_better_than_threshold=0.2,
             best_model_func_raw=gpt_complete,
             best_model_name=global_config.get("analysisModel"),    
             best_model_max_token_size=32768,
-            best_model_max_async=16,
+            best_model_max_async=2,
             cheap_model_func_raw=gpt_complete,
             cheap_model_name=global_config.get("processingModel"),
             cheap_model_max_token_size=32768,
-            cheap_model_max_async=16,
+            cheap_model_max_async=2,
             caption_model_func_raw=dashscope_caption_complete,
             caption_model_name=global_config.get("caption_model"),
-            caption_model_max_async=3
+            caption_model_max_async=1
         )
         
         videorag_instance = VideoRAG(

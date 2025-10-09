@@ -1,7 +1,8 @@
 # Dependencies
 node_modules/
 bower_components/
-
+.DS_Store
+Vimo-desktop/video-cache/
 # Build outputs
 dist/
 out/

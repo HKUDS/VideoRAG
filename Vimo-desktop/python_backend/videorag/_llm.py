@@ -91,8 +91,8 @@ class LLMConfig:
 
 ##### OpenAI Configuration
 @retry(
-    stop=stop_after_attempt(5),
-    wait=wait_exponential(multiplier=1, min=4, max=10),
+    stop=stop_after_attempt(10),
+    wait=wait_exponential(multiplier=2, min=8, max=60),
     retry=retry_if_exception_type((RateLimitError, APIConnectionError)),
 )
 async def openai_complete_if_cache(
@@ -138,8 +138,8 @@ async def gpt_complete(
     )
 
 @retry(
-    stop=stop_after_attempt(5),
-    wait=wait_exponential(multiplier=1, min=4, max=10),
+    stop=stop_after_attempt(10),
+    wait=wait_exponential(multiplier=2, min=8, max=60),
     retry=retry_if_exception_type((RateLimitError, APIConnectionError)),
 )
 async def openai_embedding(model_name: str, texts: list[str], **kwargs) -> np.ndarray:
@@ -153,8 +153,8 @@ async def openai_embedding(model_name: str, texts: list[str], **kwargs) -> np.nd
     return np.array([dp.embedding for dp in response.data])
 
 @retry(
-    stop=stop_after_attempt(5),
-    wait=wait_exponential(multiplier=1, min=4, max=10),
+    stop=stop_after_attempt(10),
+    wait=wait_exponential(multiplier=2, min=8, max=60),
     retry=retry_if_exception_type((RateLimitError, APIConnectionError)),
 )
 async def dashscope_caption_complete(

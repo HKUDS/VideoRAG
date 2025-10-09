@@ -1,8 +1,8 @@
-VIMO & VIDEORAG PROJECT DUAL LICENSE
+Whizzhive & VIDEORAG PROJECT DUAL LICENSE
 
 =======================================================================
 
-This project contains both Vimo and VideoRAG components with different 
+This project contains both Whizzhive and VideoRAG components with different 
 licensing terms depending on usage:
 
 1. Framework Architecture (MIT License)
@@ -13,10 +13,10 @@ licensing terms depending on usage:
 PART 1: FRAMEWORK ARCHITECTURE
 Licensed under the MIT License
 
-Copyright (c) 2024 Vimo & VideoRAG Project
+Copyright (c) 2024 Whizzhive & VideoRAG Project
 
 The core framework architecture, design patterns, and concepts of both 
-Vimo and VideoRAG components are licensed under the MIT License. This includes:
+Whizzhive and VideoRAG components are licensed under the MIT License. This includes:
 - The overall system architecture and design
 - Framework interfaces and abstractions  
 - Core organizational structure and methodology
@@ -49,7 +49,7 @@ third-party models, each with their own licensing terms:
 
 COMPONENT-SPECIFIC MODEL USAGE:
 
-Vimo-desktop/:
+Whizzhive-desktop/:
   - Uses ImageBind (Attribution-NonCommercial-ShareAlike 4.0 International)
 
 VideoRAG-algorithm/:
@@ -82,13 +82,13 @@ Your usage rights depend on how you use this project:
 2. CURRENT IMPLEMENTATION AS-IS
    If you use the current codebase with its integrated models:
    
-   For Vimo-desktop component:
+   For Whizzhive-desktop component:
    → NonCommercial use only (due to ImageBind license)
    
    For VideoRAG-algorithm component:
    → NonCommercial use only (due to ImageBind license)
    
-   For the entire project (both Vimo & VideoRAG):
+   For the entire project (both Whizzhive & VideoRAG):
    → NonCommercial use only (due to ImageBind license)
 
 3. MODIFIED IMPLEMENTATION
@@ -107,7 +107,7 @@ FOR COMMERCIAL APPLICATIONS:
 - Option 3: Contact ImageBind authors for commercial licensing terms
 
 CURRENT IMPLEMENTATION RESTRICTIONS:
-Due to ImageBind's NonCommercial license in both Vimo-desktop and 
+Due to ImageBind's NonCommercial license in both Whizzhive-desktop and 
 VideoRAG-algorithm components, the current complete implementation 
 is restricted to NonCommercial use only.
 
@@ -115,7 +115,7 @@ is restricted to NonCommercial use only.
 
 IMPORTANT DISCLAIMERS
 
-1. MODEL REPLACEABILITY: Both Vimo and VideoRAG frameworks are designed 
+1. MODEL REPLACEABILITY: Both Whizzhive and VideoRAG frameworks are designed 
    to be model-agnostic. Third-party models can be replaced with 
    alternatives that have different license terms.
 

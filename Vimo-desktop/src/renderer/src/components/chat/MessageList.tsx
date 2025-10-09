@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 import { Video } from 'lucide-react';
 import { Message } from '../../types/chat';
 import { ChatProgressBar } from './ChatProgressBar';
-import vimoLogo from '../../assets/images/vimi-logo.png';
+import WhizzhiveLogo from '../../assets/images/vimi-logo.png';
 
 interface MessageListProps {
   messages: Message[];
@@ -45,9 +45,9 @@ export const MessageList = ({ messages, isLoading }: MessageListProps) => {
               <div className="flex justify-start">
                 <div className="max-w-[85%]">
                   <div className="flex items-center gap-2 mb-2">
-                    <img src={vimoLogo} alt="Vimo" className="w-6 h-6 rounded-lg shadow-sm border border-gray-100/50" />
+                    <img src={WhizzhiveLogo} alt="Whizzhive" className="w-6 h-6 rounded-lg shadow-sm border border-gray-100/50" />
                     <span className="text-sm font-medium text-gray-600">
-                      Vimo
+                      Whizzhive
                     </span>
                   </div>
                   <div className={`bg-white p-4 rounded-2xl rounded-tl-md shadow-sm border border-gray-100 transition-all duration-500 ease-out ${
@@ -93,9 +93,9 @@ export const MessageList = ({ messages, isLoading }: MessageListProps) => {
           <div className="flex justify-start">
             <div className="max-w-[85%]">
               <div className="flex items-center gap-2 mb-2">
-                <img src={vimoLogo} alt="Vimo" className="w-6 h-6 rounded-lg shadow-sm border border-gray-100/50" />
+                <img src={WhizzhiveLogo} alt="Whizzhive" className="w-6 h-6 rounded-lg shadow-sm border border-gray-100/50" />
                 <span className="text-sm font-medium text-gray-600">
-                  Vimo
+                  Whizzhive
                 </span>
               </div>
               <div className="bg-white p-4 rounded-2xl rounded-tl-md shadow-sm border border-gray-100">

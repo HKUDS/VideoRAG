@@ -1,10 +1,10 @@
 <div align="center">
   <picture>
-      <img src="cover.png" width="80%" style="border: none; box-shadow: none;" alt="Vimo: Chat with Your Videos">
+      <img src="cover.png" width="80%" style="border: none; box-shadow: none;" alt="Whizzhive: Chat with Your Videos">
   </picture>
   
   <h1>
-    <strong>VideoRAG: Chat with Your Videos</strong> • <strong>Vimo Desktop</strong>
+    <strong>VideoRAG: Chat with Your Videos</strong> • <strong>Whizzhive Desktop</strong>
   </h1>
   
   <a href='https://arxiv.org/abs/2502.01549'><img src='https://img.shields.io/badge/arXiv-2502.01549-b31b1b'></a>
@@ -21,23 +21,23 @@
 
 <img src='VideoRAG-algorithm/VideoRAG_cover.png' />
 
-Vimo is a revolutionary desktop application that lets you **chat with your videos** using cutting-edge AI technology. Built on the powerful [VideoRAG framework](https://arxiv.org/abs/2502.01549), Vimo can understand and analyze videos of any length - from short clips to hundreds of hours of content - and answer your questions with remarkable accuracy.
+Whizzhive is a revolutionary desktop application that lets you **chat with your videos** using cutting-edge AI technology. Built on the powerful [VideoRAG framework](https://arxiv.org/abs/2502.01549), Whizzhive can understand and analyze videos of any length - from short clips to hundreds of hours of content - and answer your questions with remarkable accuracy.
 
-### 🎥 Watch Vimo in Action
+### 🎥 Watch Whizzhive in Action
 
-See how Vimo transforms video interaction with intelligent conversations and deep understanding capabilities.
+See how Whizzhive transforms video interaction with intelligent conversations and deep understanding capabilities.
 
 <div align="center">
   <a href="https://www.youtube.com/watch?v=D5vsxcp4QZI">
-    <img src="https://img.youtube.com/vi/D5vsxcp4QZI/maxresdefault.jpg" width="80%" alt="Vimo Introduction Video">
+    <img src="https://img.youtube.com/vi/D5vsxcp4QZI/maxresdefault.jpg" width="80%" alt="Whizzhive Introduction Video">
   </a>
-  <p><em>👆 Click to watch the Vimo demo video</em></p>
+  <p><em>👆 Click to watch the Whizzhive demo video</em></p>
 </div>
 
 ## ✨ Key Features
 
 ### For Everyone
-- **Drag & Drop Upload**: Simply drag video files into Vimo
+- **Drag & Drop Upload**: Simply drag video files into Whizzhive
 - **Smart Conversations**: Ask questions in natural language
 - **Multi-Format Support**: Works with MP4, MKV, AVI, and more
 - **Cross-Platform**: Available on macOS, Windows, and Linux
@@ -54,7 +54,7 @@ See how Vimo transforms video interaction with intelligent conversations and dee
 - **Performance Metrics**: Detailed evaluation against existing methods
 - **Extensible Architecture**: Build upon our open-source foundation
   
-## 🌟 Why Vimo?
+## 🌟 Why Whizzhive?
 
 **For Video Enthusiasts & Professionals:**
 - **Effortless Video Analysis**: Upload any video and start asking questions immediately
@@ -79,15 +79,15 @@ See how Vimo transforms video interaction with intelligent conversations and dee
 - [🤝 Contributing](#-contributing)
 - [🙏 Acknowledgement](#-acknowledgement)
 
-## 🚀 Quick Start of Vimo
+## 🚀 Quick Start of Whizzhive
 
-### Option 1: Download Vimo App (Coming Soon)
+### Option 1: Download Whizzhive App (Coming Soon)
 
 > [!NOTE]
 > We are preparing the **Beta release** for macOS Apple Silicon first, with Windows and Linux versions coming soon!
 
 <div align="left">
-  <a href="https://github.com/HKUDS/Vimo/releases">
+  <a href="https://github.com/HKUDS/Whizzhive/releases">
     <img src="https://img.shields.io/badge/Coming%20Soon-Mac%20Download-007ACC?style=for-the-badge&logo=apple&logoColor=white" alt="Coming Soon - Mac Release" height="50">
   </a>
 </div>
@@ -96,7 +96,7 @@ See how Vimo transforms video interaction with intelligent conversations and dee
 
 For detailed setup instructions:
 
-- **Vimo Desktop App**: See [Vimo-desktop](Vimo-desktop) for complete installation and configuration steps
+- **Whizzhive Desktop App**: See [Whizzhive-desktop](Whizzhive-desktop) for complete installation and configuration steps
 
 **Quick Overview:**
 1. Set up the Python backend environment and start the VideoRAG server
@@ -128,7 +128,7 @@ VideoRAG introduces a novel dual-channel architecture that combines:
 Our VideoRAG algorithm significantly outperforms existing methods in long-context video understanding:
 
 <div align="center">
-  <img src="Vimo-desktop/figures/table.png" width="80%" alt="Performance Comparison" />
+  <img src="Whizzhive-desktop/figures/table.png" width="80%" alt="Performance Comparison" />
 </div>
 
 ### Experiments and Evaluation
@@ -154,7 +154,7 @@ For detailed evaluation instructions and reproduction scripts, see [VideoRAG-alg
 
 ## 📖 Citation
 
-If you find Vimo or VideoRAG helpful in your research, please cite our paper:
+If you find Whizzhive or VideoRAG helpful in your research, please cite our paper:
 
 ```bibtex
 @article{VideoRAG,
@@ -169,7 +169,7 @@ If you find Vimo or VideoRAG helpful in your research, please cite our paper:
 
 We welcome contributions from the community! Whether you're:
 
-- **Reporting bugs** or suggesting features for Vimo
+- **Reporting bugs** or suggesting features for Whizzhive
 - **Improving VideoRAG algorithms** or adding new capabilities  
 - **Enhancing documentation** or creating tutorials
 - **Designing UI/UX improvements** for better user experience
@@ -178,14 +178,14 @@ Feel free to submit issues and pull requests. Together, we're building the futur
 
 ## 🙏 Acknowledgement
 
-Vimo builds upon the incredible work of the open-source community:
+Whizzhive builds upon the incredible work of the open-source community:
 
-- **[VideoRAG](https://arxiv.org/abs/2502.01549)**: The core algorithm powering Vimo's intelligence
+- **[VideoRAG](https://arxiv.org/abs/2502.01549)**: The core algorithm powering Whizzhive's intelligence
 - **[nano-graphrag](https://github.com/gusye1234/nano-graphrag)** & **[LightRAG](https://github.com/HKUDS/LightRAG)**: Graph-based retrieval foundations
 - **[ImageBind](https://github.com/facebookresearch/ImageBind)**: Multi-modal representation learning
 - **[uitars-desktop](https://github.com/bytedance/UI-TARS-desktop)**: Desktop application architecture inspiration
 
-**🌟 Transform how you interact with videos. Start your journey with Vimo today!**
+**🌟 Transform how you interact with videos. Start your journey with Whizzhive today!**
 
 ---
 

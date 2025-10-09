@@ -48,12 +48,17 @@ async def segment_caption_async(video_name, video_path, segment_index2name, tran
     """Async caption generation with concurrent processing"""
     caption_model_func = global_config["llm"]["caption_model_func"]
     
+    # Check if transcripts are empty (e.g., when ASR failed due to no audio)
+    if not transcripts:
+        logger.warning(f"⚠️ No transcripts available for video {video_name}. Skipping caption generation.")
+        return {}
+    
     logger.info(f"🎬 Extracting frames for {len(segment_index2name)} segments...")
     with VideoFileClip(video_path) as video:
         segment_data = {
             index: {
                 'frames': encode_video(video, segment_times_info[index]["frame_times"]),
-                'transcript': transcripts[index]
+                'transcript': transcripts.get(index, "")  # Use empty string if transcript not found
             }
             for index in segment_index2name
         }
@@ -91,8 +96,13 @@ def merge_segment_information(segment_index2name, segment_times_info, transcript
         inserting_segments[index] = {"content": None, "time": None}
         segment_name = segment_index2name[index]
         inserting_segments[index]["time"] = '-'.join(segment_name.split('-')[-2:])
-        inserting_segments[index]["content"] = f"Caption:\n{captions[index]}\nTranscript:\n{transcripts[index]}\n\n"
-        inserting_segments[index]["transcript"] = transcripts[index]
+        
+        # Handle empty transcripts and captions gracefully
+        transcript_text = transcripts.get(index, "No transcript available")
+        caption_text = captions.get(index, "No caption available")
+        
+        inserting_segments[index]["content"] = f"Caption:\n{caption_text}\nTranscript:\n{transcript_text}\n\n"
+        inserting_segments[index]["transcript"] = transcript_text
         inserting_segments[index]["frame_times"] = segment_times_info[index]["frame_times"].tolist()
     return inserting_segments
 

@@ -287,7 +287,7 @@ const ModelStatusSection = ({ storeDirectory }: { storeDirectory: string }) => {
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
             <p className="text-muted-foreground">
-              Configure your Vimo application preferences and environment.
+              Configure your Whizzhive application preferences and environment.
             </p>
           </div>
 
@@ -498,7 +498,7 @@ const ModelStatusSection = ({ storeDirectory }: { storeDirectory: string }) => {
                   className="w-full px-3 py-2 text-sm border rounded-md bg-gray-50 focus:outline-none"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Directory for storing AI models (ImageBind) and Vimo cache data
+                  Directory for storing AI models (ImageBind) and Whizzhive cache data
                 </p>
               </div>
             </CardContent>

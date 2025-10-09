@@ -186,7 +186,7 @@ export const generateChatId = (): string => `chat-${Date.now()}`;
 export const getWelcomeMessage = (): Message => ({
   id: 'welcome',
   type: 'assistant',
-  content: "Hello! I'm Vimo, your AI assistant for video analysis. Upload videos and ask me anything about them - I can analyze content, summarize key points, and answer questions about what I see.",
+  content: "Hello! I'm Whizzhive, your AI assistant for video analysis. Upload videos and ask me anything about them - I can analyze content, summarize key points, and answer questions about what I see.",
   timestamp: new Date(),
 });
 

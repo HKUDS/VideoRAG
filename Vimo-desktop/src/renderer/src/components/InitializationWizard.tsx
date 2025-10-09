@@ -13,7 +13,7 @@ import {
   Star,
   ExternalLink,
 } from 'lucide-react';
-import vimoLogo from '../assets/images/vimi-logo.png';
+import WhizzhiveLogo from '../assets/images/vimi-logo.png';
 
 interface InitializationWizardProps {
   onComplete: () => void;
@@ -250,7 +250,7 @@ const InitializationWizard: React.FC<InitializationWizardProps> = ({ onComplete 
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">Data Storage Directory</h3>
-            <p className="text-sm text-gray-600">AI models and Vimo cache data will be stored at this location</p>
+            <p className="text-sm text-gray-600">AI models and Whizzhive cache data will be stored at this location</p>
           </div>
         </div>
 
@@ -576,7 +576,7 @@ const InitializationWizard: React.FC<InitializationWizardProps> = ({ onComplete 
       <div>
         <h2 className="text-3xl font-bold text-gray-900 mb-3">🎉 Setup Complete!</h2>
         <p className="text-lg text-gray-600 mb-4">
-          Vimo is ready! You can now start using intelligent video analysis features
+          Whizzhive is ready! You can now start using intelligent video analysis features
         </p>
       </div>
 
@@ -598,7 +598,7 @@ const InitializationWizard: React.FC<InitializationWizardProps> = ({ onComplete 
         </div>
         <div className="p-3 bg-purple-50 rounded-lg border border-purple-100">
           <CheckCircle className="w-5 h-5 text-purple-600 mx-auto mb-1" />
-          <div className="text-sm font-medium text-purple-800">Vimo</div>
+          <div className="text-sm font-medium text-purple-800">Whizzhive</div>
           <div className="text-xs text-purple-600">Ready!</div>
         </div>
       </div>
@@ -607,7 +607,7 @@ const InitializationWizard: React.FC<InitializationWizardProps> = ({ onComplete 
         onClick={completeInitialization}
         className="px-8 py-3 text-lg font-bold bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg shadow-lg transition-all"
       >
-        Start Using Vimo
+        Start Using Whizzhive
         <ArrowRight className="w-5 h-5 ml-2" />
       </Button>
     </div>
@@ -624,9 +624,9 @@ const InitializationWizard: React.FC<InitializationWizardProps> = ({ onComplete 
           <div className="text-center mb-6">
             <div className="mb-4">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <img src={vimoLogo} alt="Vimo" className="w-16 h-16 rounded-2xl shadow-lg" />
+                <img src={WhizzhiveLogo} alt="Whizzhive" className="w-16 h-16 rounded-2xl shadow-lg" />
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-                  Vimo
+                  Whizzhive
                 </h1>
               </div>
             </div>

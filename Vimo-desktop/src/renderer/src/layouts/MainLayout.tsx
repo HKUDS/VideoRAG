@@ -39,7 +39,7 @@ const ServiceLoadingOverlay = ({ show }: { show: boolean }) => {
           {/* Title text */}
           <div className="text-center space-y-3">
             <h3 className="text-xl font-semibold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-              Awakening Vimo
+              Awakening Whizzhive
             </h3>
           </div>
         </div>

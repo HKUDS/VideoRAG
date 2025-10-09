@@ -1,10 +1,10 @@
 
 <div align="center">
   <picture>
-      <img src="figures/Vimo-logo.png" width="30%" alt="Vimo: Agentic Video Understanding">
+      <img src="figures/Whizzhive-logo.png" width="30%" alt="Whizzhive: Agentic Video Understanding">
   </picture>
   
-  <h1>Vimo: Chat with Your Videos</h1>
+  <h1>Whizzhive: Chat with Your Videos</h1>
   
 
   [![Version](https://img.shields.io/badge/version-Beta-blue.svg)](package.json)
@@ -12,19 +12,19 @@
   [![Platform](https://img.shields.io/badge/platform-macOS%20|%20Windows%20|%20Linux-lightgrey.svg)]()
   [![arXiv](https://img.shields.io/badge/arXiv-2502.01549-b31b1b.svg)](https://arxiv.org/abs/2502.01549)
   [![Powered by](https://img.shields.io/badge/powered%20by-VideoRAG-orange.svg)](https://github.com/HKUDS/VideoRAG)
-  [![Visitors](https://komarev.com/ghpvc/?username=HKUDS&repo=Vimo&style=flat-square&label=Visitors&color=blue)](https://github.com/HKUDS/Vimo)
+  [![Visitors](https://komarev.com/ghpvc/?username=HKUDS&repo=Whizzhive&style=flat-square&label=Visitors&color=blue)](https://github.com/HKUDS/Whizzhive)
 
 </div>
 
 ## 1. Introduction
 
-Vimo is a state-of-the-art agentic video understanding platform with intelligent conversational capabilities and comprehensive video analysis. Built upon the advanced [VideoRAG](https://github.com/HKUDS/VideoRAG) technology from HKUDS, Vimo achieves exceptional performance across video comprehension, content extraction, and interactive QA tasks while being meticulously optimized for real-world deployment scenarios.
+Whizzhive is a state-of-the-art agentic video understanding platform with intelligent conversational capabilities and comprehensive video analysis. Built upon the advanced [VideoRAG](https://github.com/HKUDS/VideoRAG) technology from HKUDS, Whizzhive achieves exceptional performance across video comprehension, content extraction, and interactive QA tasks while being meticulously optimized for real-world deployment scenarios.
 
 <div align="center">
   <a href="https://www.youtube.com/watch?v=D5vsxcp4QZI">
-    <img src="https://img.youtube.com/vi/D5vsxcp4QZI/maxresdefault.jpg" width="80%" alt="Vimo Introduction Video">
+    <img src="https://img.youtube.com/vi/D5vsxcp4QZI/maxresdefault.jpg" width="80%" alt="Whizzhive Introduction Video">
   </a>
-  <p><em>👆 Click to watch the Vimo demo video</em></p>
+  <p><em>👆 Click to watch the Whizzhive demo video</em></p>
 </div>
 
 ### Key Features
@@ -35,33 +35,33 @@ Vimo is a state-of-the-art agentic video understanding platform with intelligent
 
 ### Core Technology
 
-Vimo is powered by [VideoRAG](https://github.com/HKUDS/VideoRAG), which is a retrieval-augmented generation framework specifically designed for processing and understanding extremely long-context videos. For detailed performance comparison, please refer to our [paper](https://arxiv.org/abs/2502.01549).
+Whizzhive is powered by [VideoRAG](https://github.com/HKUDS/VideoRAG), which is a retrieval-augmented generation framework specifically designed for processing and understanding extremely long-context videos. For detailed performance comparison, please refer to our [paper](https://arxiv.org/abs/2502.01549).
 
 <div align="center">
   <picture>
-      <img src="figures/table.png" width="100%" alt="Vimo: Agentic Video Understanding">
+      <img src="figures/table.png" width="100%" alt="Whizzhive: Agentic Video Understanding">
   </picture>
 </div>
 
 ## 2. Quick Start
 
-### Option 1: Install Vimo App & Run it
+### Option 1: Install Whizzhive App & Run it
 
 > [!NOTE]
-> We are starting with a **Beta version** and will continuously improve our Vimo based on feedback and suggestions from the open-source community. The first packaged release will be available once we complete our preparations.
+> We are starting with a **Beta version** and will continuously improve our Whizzhive based on feedback and suggestions from the open-source community. The first packaged release will be available once we complete our preparations.
 > Future releases will be available for **macOS Apple Silicon** first, with Windows and Linux versions coming later!
 
 <div align="left">
-  <a href="https://github.com/HKUDS/Vimo">
+  <a href="https://github.com/HKUDS/Whizzhive">
     <img src="https://img.shields.io/badge/Coming%20Soon-Mac-007ACC?style=for-the-badge&logo=apple&logoColor=white" alt="Coming Soon - Mac Release" height="60">
   </a>
 </div>
 
-The packaged version will be available soon! In the meantime, please use Option 2 to run Vimo from source code.
+The packaged version will be available soon! In the meantime, please use Option 2 to run Whizzhive from source code.
 
 
 
-### Option 2: Run Vimo from Source Code
+### Option 2: Run Whizzhive from Source Code
 
 > [!NOTE]
 > Ensure the backend service is running before launching the frontend application.
@@ -69,11 +69,11 @@ The packaged version will be available soon! In the meantime, please use Option 
 
 #### Step 1: Set Up and Start Backend Service
 
-Since Vimo utilizes a Python-based VideoRAG server as its backend, please follow the steps below to create the appropriate Python environment:
+Since Whizzhive utilizes a Python-based VideoRAG server as its backend, please follow the steps below to create the appropriate Python environment:
 
 ```bash
-conda create --name vimo python=3.11
-conda activate vimo
+conda create --name Whizzhive python=3.11
+conda activate Whizzhive
 
 # Core numerical and deep learning libraries
 pip install numpy==1.26.4 torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2
@@ -116,17 +116,17 @@ pnpm install
 pnpm dev
 ```
 
-> ⚠️ **File Location Notice (Current Version)**: Once a video is imported into Vimo, avoid moving or renaming the video file on your computer. In the current beta version, changing the file path may disrupt Vimo's ability to access the video. This limitation will be addressed in future releases.
+> ⚠️ **File Location Notice (Current Version)**: Once a video is imported into Whizzhive, avoid moving or renaming the video file on your computer. In the current beta version, changing the file path may disrupt Whizzhive's ability to access the video. This limitation will be addressed in future releases.
 
 ## 3. Contribution
 
-We embrace the open-source spirit and welcome contributions from the community! Whether you're fixing bugs, adding features, improving documentation, or suggesting enhancements, your contributions help make Vimo better for everyone.
+We embrace the open-source spirit and welcome contributions from the community! Whether you're fixing bugs, adding features, improving documentation, or suggesting enhancements, your contributions help make Whizzhive better for everyone.
 
 🤗 Feel free to submit issues and pull requests!
 
 ## 4. Acknowledgement
 
-We would like to express our gratitude to the following open-source projects that have inspired and contributed to Vimo's development:
+We would like to express our gratitude to the following open-source projects that have inspired and contributed to Whizzhive's development:
 
 - **[nano-graphrag](https://github.com/gusye1234/nano-graphrag)**: For providing innovative algorithms and techniques that enhanced our video understanding capabilities.
 - **[uitars-desktop](https://github.com/bytedance/UI-TARS-desktop)**: For inspiring our frontend development approach and providing valuable insights into desktop application architecture.

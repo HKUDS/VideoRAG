@@ -52,7 +52,7 @@ export const WelcomeScreen = ({
             {/* Welcome Message */}
             <div className="mb-16">
               <h1 className="text-5xl font-bold text-gray-800 mb-4">
-                Welcome, it's <span className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 bg-clip-text text-transparent">Vimo</span> !
+                Welcome, it's <span className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 bg-clip-text text-transparent">Whizzhive</span> !
               </h1>
             </div>
 

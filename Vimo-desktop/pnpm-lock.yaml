@@ -9,10 +9,10 @@ importers:
   .:
     dependencies:
       axios:
-        specifier: ^1.6.0
+        specifier: ^1.10.0
         version: 1.10.0
       electron-store:
-        specifier: ^10.0.0
+        specifier: ^10.1.0
         version: 10.1.0
     devDependencies:
       '@electron-toolkit/eslint-config-prettier':
@@ -22,7 +22,7 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(eslint@8.57.1)(typescript@5.8.3)
       '@electron-toolkit/preload':
-        specifier: ^3.0.1
+        specifier: ^3.0.2
         version: 3.0.2(electron@34.1.1)
       '@electron-toolkit/tsconfig':
         specifier: ^1.0.1
@@ -31,31 +31,31 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(electron@34.1.1)
       '@radix-ui/react-slot':
-        specifier: ^1.1.0
+        specifier: ^1.2.3
         version: 1.2.3(@types/react@18.3.23)(react@18.3.1)
       '@tailwindcss/postcss':
         specifier: ^4.1.11
         version: 4.1.11
       '@tailwindcss/vite':
-        specifier: 4.1.3
+        specifier: ^4.1.3
         version: 4.1.3(vite@6.3.5(@types/node@20.19.2)(jiti@2.4.2)(lightningcss@1.30.1))
       '@types/node':
-        specifier: ^20.14.8
+        specifier: ^20.19.2
         version: 20.19.2
       '@types/react':
-        specifier: ^18.3.12
+        specifier: ^18.3.23
         version: 18.3.23
       '@types/react-dom':
-        specifier: ^18.3.1
+        specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.23)
       '@typescript-eslint/eslint-plugin':
-        specifier: ^5.0.0
+        specifier: ^5.62.0
         version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)(typescript@5.8.3)
       '@typescript-eslint/parser':
-        specifier: ^5.0.0
+        specifier: ^5.62.0
         version: 5.62.0(eslint@8.57.1)(typescript@5.8.3)
       '@vitejs/plugin-react':
-        specifier: ^4.3.4
+        specifier: ^4.6.0
         version: 4.6.0(vite@6.3.5(@types/node@20.19.2)(jiti@2.4.2)(lightningcss@1.30.1))
       autoprefixer:
         specifier: ^10.4.21
@@ -70,19 +70,19 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       electron:
-        specifier: 34.1.1
+        specifier: ^34.1.1
         version: 34.1.1
       electron-builder:
         specifier: ^26.0.12
         version: 26.0.12(electron-builder-squirrel-windows@26.0.12(dmg-builder@26.0.12))
       electron-vite:
-        specifier: ^3.0.0
+        specifier: ^3.1.0
         version: 3.1.0(vite@6.3.5(@types/node@20.19.2)(jiti@2.4.2)(lightningcss@1.30.1))
       eslint:
-        specifier: ^8.57.0
+        specifier: ^8.57.1
         version: 8.57.1
       eslint-plugin-react:
-        specifier: ^7.34.3
+        specifier: ^7.37.5
         version: 7.37.5(eslint@8.57.1)
       lucide-react:
         specifier: ^0.468.0
@@ -91,7 +91,7 @@ importers:
         specifier: ^8.5.6
         version: 8.5.6
       prettier:
-        specifier: ^3.3.2
+        specifier: ^3.6.2
         version: 3.6.2
       react:
         specifier: ^18.3.1
@@ -100,25 +100,25 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-router:
-        specifier: ^7.1.1
+        specifier: ^7.6.3
         version: 7.6.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
       sonner:
-        specifier: ^1.7.1
+        specifier: ^1.7.4
         version: 1.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tailwind-merge:
-        specifier: ^2.5.4
+        specifier: ^2.6.0
         version: 2.6.0
       tailwindcss:
         specifier: ^4.1.11
         version: 4.1.11
       typescript:
-        specifier: ^5.7.2
+        specifier: ^5.8.3
         version: 5.8.3
       vite:
-        specifier: ^6.1.0
+        specifier: ^6.3.5
         version: 6.3.5(@types/node@20.19.2)(jiti@2.4.2)(lightningcss@1.30.1)
 
 packages:

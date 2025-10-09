@@ -63,6 +63,13 @@ async def speech_to_text_online(video_name, working_dir, segment_index2name, aud
         segment_name = segment_index2name[index]
         audio_file = os.path.join(cache_path, f"{segment_name}.{audio_output_format}")
         
+        # Check if audio file exists before creating task
+        if not os.path.exists(audio_file):
+            logger.warning(f"⚠️ Audio file not found for segment {segment_name}: {audio_file}")
+            # Still create a task but it will fail gracefully
+        else:
+            logger.info(f"✅ Found audio file for segment {segment_name}: {audio_file}")
+        
         task = process_single_segment(
             semaphore, index, segment_name, audio_file, 
             global_config.get('asr_model'), audio_output_format, sample_rate

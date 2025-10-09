@@ -80,7 +80,7 @@ export const ChatInput = ({
                     : isQueryProcessing
                       ? "Processing your query..."
                       : !isServiceReady 
-                        ? "Vimo service is not ready..." 
+                        ? "Whizzhive service is not ready..." 
                         : "Ask me anything about your videos..."
                 }
                 disabled={isInputDisabled}
@@ -120,7 +120,7 @@ export const ChatInput = ({
                   : isQueryProcessing
                     ? 'Please wait for query processing to complete'
                     : !isServiceReady 
-                      ? 'Vimo service not ready'
+                      ? 'Whizzhive service not ready'
                       : 'Enter to send, Shift+Enter for new line'
                 }
               </div>
