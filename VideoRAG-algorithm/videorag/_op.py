@@ -909,7 +909,7 @@ async def videorag_query_multiple_choice(
     response = await use_model_func(
         query,
         system_prompt=sys_prompt,
-        use_cache=False,
+        # use_cache=False,
     )
     while True:
         try:
@@ -921,6 +921,6 @@ async def videorag_query_multiple_choice(
             response = await use_model_func(
                 query,
                 system_prompt=sys_prompt,
-                use_cache=False,
+                # use_cache=False,
             )
     
