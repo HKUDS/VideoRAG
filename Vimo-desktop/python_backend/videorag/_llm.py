@@ -100,6 +100,8 @@ async def openai_complete_if_cache(
 ) -> str:
     openai_async_client = get_openai_async_client_instance(kwargs["global_config"])
     hashing_kv: BaseKVStorage = kwargs.pop("hashing_kv", None)
+    use_cache = kwargs.pop("use_cache", True)
+
     # Remove global_config from kwargs as it's not needed for OpenAI API call
     kwargs.pop("global_config", None)
     
@@ -108,7 +110,8 @@ async def openai_complete_if_cache(
         messages.append({"role": "system", "content": system_prompt})
     messages.extend(history_messages)
     messages.append({"role": "user", "content": prompt})
-    if hashing_kv is not None:
+
+    if hashing_kv is not None and use_cache:
         args_hash = compute_args_hash(model, messages)
         if_cache_return = await hashing_kv.get_by_id(args_hash)
         # NOTE: I update here to avoid the if_cache_return["return"] is None
@@ -119,7 +122,7 @@ async def openai_complete_if_cache(
         model=model, messages=messages, **kwargs
     )
 
-    if hashing_kv is not None:
+    if hashing_kv is not None and use_cache:
         await hashing_kv.upsert(
             {args_hash: {"return": response.choices[0].message.content, "model": model}}
         )
