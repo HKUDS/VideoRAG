@@ -93,12 +93,15 @@ async def openai_complete_if_cache(
 ) -> str:
     openai_async_client = get_openai_async_client_instance()
     hashing_kv: BaseKVStorage = kwargs.pop("hashing_kv", None)
+    use_cache = kwargs.pop("use_cache", True)
+
     messages = []
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
     messages.extend(history_messages)
     messages.append({"role": "user", "content": prompt})
-    if hashing_kv is not None:
+
+    if hashing_kv is not None and use_cache:
         args_hash = compute_args_hash(model, messages)
         if_cache_return = await hashing_kv.get_by_id(args_hash)
         # NOTE: I update here to avoid the if_cache_return["return"] is None
@@ -109,7 +112,7 @@ async def openai_complete_if_cache(
         model=model, messages=messages, **kwargs
     )
 
-    if hashing_kv is not None:
+    if hashing_kv is not None and use_cache:
         await hashing_kv.upsert(
             {args_hash: {"return": response.choices[0].message.content, "model": model}}
         )
@@ -204,12 +207,15 @@ async def azure_openai_complete_if_cache(
 ) -> str:
     azure_openai_client = get_azure_openai_async_client_instance()
     hashing_kv: BaseKVStorage = kwargs.pop("hashing_kv", None)
+    use_cache = kwargs.pop("use_cache", True)
+
     messages = []
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
     messages.extend(history_messages)
     messages.append({"role": "user", "content": prompt})
-    if hashing_kv is not None:
+
+    if hashing_kv is not None and use_cache:
         args_hash = compute_args_hash(deployment_name, messages)
         if_cache_return = await hashing_kv.get_by_id(args_hash)
         # NOTE: I update here to avoid the if_cache_return["return"] is None
@@ -220,7 +226,7 @@ async def azure_openai_complete_if_cache(
         model=deployment_name, messages=messages, **kwargs
     )
 
-    if hashing_kv is not None:
+    if hashing_kv is not None and use_cache:
         await hashing_kv.upsert(
             {
                 args_hash: {
@@ -301,6 +307,8 @@ async def ollama_complete_if_cache(
     ollama_client = get_ollama_async_client_instance()
 
     hashing_kv: BaseKVStorage = kwargs.pop("hashing_kv", None)
+    use_cache = kwargs.pop("use_cache", True)
+
     messages = []
     
     if system_prompt:
@@ -308,7 +316,7 @@ async def ollama_complete_if_cache(
     messages.extend(history_messages)
     messages.append({"role": "user", "content": prompt})
 
-    if hashing_kv is not None:
+    if hashing_kv is not None and use_cache:
         args_hash = compute_args_hash(model, messages)
         if_cache_return = await hashing_kv.get_by_id(args_hash)
         # NOTE: I update here to avoid the if_cache_return["return"] is None
@@ -324,7 +332,7 @@ async def ollama_complete_if_cache(
     # print(response['message']['content'])
 
     
-    if hashing_kv is not None:
+    if hashing_kv is not None and use_cache:
         await hashing_kv.upsert(
             {args_hash: {"return": response['message']['content'], "model": model}}
         )
@@ -400,13 +408,15 @@ async def deepseek_complete_if_cache(
     import httpx
     
     hashing_kv: BaseKVStorage = kwargs.pop("hashing_kv", None)
+    use_cache = kwargs.pop("use_cache", True)
+
     messages = []
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
     messages.extend(history_messages)
     messages.append({"role": "user", "content": prompt})
 
-    if hashing_kv is not None:
+    if hashing_kv is not None and use_cache:
         args_hash = compute_args_hash(model, messages)
         if_cache_return = await hashing_kv.get_by_id(args_hash)
         if if_cache_return is not None and if_cache_return["return"] is not None:
@@ -432,7 +442,7 @@ async def deepseek_complete_if_cache(
         result = response.json()
         content = result["choices"][0]["message"]["content"]
 
-    if hashing_kv is not None:
+    if hashing_kv is not None and use_cache:
         await hashing_kv.upsert(
             {args_hash: {"return": content, "model": model}}
         )
