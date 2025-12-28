@@ -6,6 +6,8 @@
   <h1>
     <strong>VideoRAG: Chat with Your Videos</strong> • <strong>Vimo Desktop</strong>
   </h1>
+
+  <a href="https://trendshift.io/repositories/16146" target="_blank"><img src="https://trendshift.io/api/badge/repositories/16146" alt="HKUDS%2FVideoRAG | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
   
   <a href='https://arxiv.org/abs/2502.01549'><img src='https://img.shields.io/badge/arXiv-2502.01549-b31b1b'></a>
   <a href='https://github.com/HKUDS/VideoRAG/issues/1'><img src='https://img.shields.io/badge/群聊-wechat/feishu-green'></a>
