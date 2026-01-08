@@ -1,4 +1,7 @@
 {
+  "name": "vimo-desktop",
+  "version": "0.1.0",
+  "description": "Vimo Desktop - Chat with Your Videos using VideoRAG",
   "main": "./dist/main/main.js",
   "packageManager": "pnpm@9.10.0",
   "scripts": {
