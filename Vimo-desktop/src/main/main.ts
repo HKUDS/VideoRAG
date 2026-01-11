@@ -8,6 +8,9 @@ import { registerFileHandlers } from './handlers/file-handlers';
 import { registerSettingsHandlers } from './handlers/settings';
 import { registerChatSessionHandlers } from './handlers/chat-session-handlers';
 
+// Fix for GPU process crash on Linux and some other systems
+// See: https://github.com/electron/electron/issues/13936
+app.disableHardwareAcceleration();
 
 // Create window when app is ready
 app.whenReady().then(() => {
@@ -55,16 +58,16 @@ function registerModelHandlers(): void {
   ipcMain.handle('check-model-files', async (_, storeDirectory: string) => {
     try {
       const { access } = require('fs/promises');
-      
+
       const imagebindPath = join(storeDirectory, 'imagebind_huge', 'imagebind_huge.pth');
-      
+
       let imagebind = false;
-      
+
       try {
         await access(imagebindPath);
         imagebind = true;
-      } catch {}
-      
+      } catch { }
+
       return { imagebind };
     } catch (error) {
       return { imagebind: false };
@@ -77,20 +80,20 @@ function registerModelHandlers(): void {
       const https = require('https');
       const { createWriteStream, mkdirSync, existsSync } = require('fs');
       const { access } = require('fs/promises');
-      
+
       // Create directory if it doesn't exist
       if (!existsSync(storeDirectory)) {
         mkdirSync(storeDirectory, { recursive: true });
       }
-      
+
       // Create imagebind_huge directory
       const imagebindDir = join(storeDirectory, 'imagebind_huge');
       if (!existsSync(imagebindDir)) {
         mkdirSync(imagebindDir, { recursive: true });
       }
-      
+
       const imagebindPath = join(imagebindDir, 'imagebind_huge.pth');
-      
+
       // Check if file already exists
       try {
         await access(imagebindPath);
@@ -98,14 +101,14 @@ function registerModelHandlers(): void {
       } catch {
         // File doesn't exist, proceed with download
       }
-      
+
       const url = 'https://dl.fbaipublicfiles.com/imagebind/imagebind_huge.pth';
-    
-    return new Promise((resolve) => {
+
+      return new Promise((resolve) => {
         const file = createWriteStream(imagebindPath);
         let downloadedBytes = 0;
         let totalBytes = 0;
-        
+
         const request = https.get(url, (response) => {
           if (response.statusCode !== 200) {
             // Delete the entire imagebind_huge directory on HTTP error
@@ -118,30 +121,30 @@ function registerModelHandlers(): void {
             resolve({ success: false, error: `HTTP ${response.statusCode}: ${response.statusMessage}` });
             return;
           }
-          
+
           totalBytes = parseInt(response.headers['content-length'] || '0', 10);
-          
+
           response.on('data', (chunk) => {
             downloadedBytes += chunk.length;
             if (totalBytes > 0) {
               const progress = Math.round((downloadedBytes / totalBytes) * 100);
-          event.sender.send('download-progress', { 
-            type: 'imagebind', 
+              event.sender.send('download-progress', {
+                type: 'imagebind',
                 progress,
                 downloaded: downloadedBytes,
                 total: totalBytes
               });
             }
-        });
-        
-        response.pipe(file);
-        
-        file.on('finish', () => {
-          file.close();
+          });
+
+          response.pipe(file);
+
+          file.on('finish', () => {
+            file.close();
             resolve({ success: true, message: 'ImageBind download completed' });
-        });
-        
-        file.on('error', (err) => {
+          });
+
+          file.on('error', (err) => {
             file.close();
             // Delete the entire imagebind_huge directory on error
             const { rmSync } = require('fs');
@@ -150,10 +153,10 @@ function registerModelHandlers(): void {
             } catch (cleanupError) {
               console.error('Failed to cleanup imagebind directory:', cleanupError);
             }
-        resolve({ success: false, error: err.message });
-      });
+            resolve({ success: false, error: err.message });
+          });
         });
-        
+
         request.on('error', (err) => {
           // Delete the entire imagebind_huge directory on error
           const { rmSync } = require('fs');
@@ -164,7 +167,7 @@ function registerModelHandlers(): void {
           }
           resolve({ success: false, error: err.message });
         });
-        
+
         request.setTimeout(300000, () => { // 5 minute timeout
           request.destroy();
           // Delete the entire imagebind_huge directory on timeout
@@ -177,7 +180,7 @@ function registerModelHandlers(): void {
           resolve({ success: false, error: 'Download timeout' });
         });
       });
-      
+
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       return { success: false, error: errorMessage };
