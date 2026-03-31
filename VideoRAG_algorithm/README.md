@@ -4,9 +4,11 @@
 
 </div>
 
+**This file is the main documentation** for installing and running the VideoRAG Python package in this repository. The [repository root README](../README.md) gives a short overview and repo layout.
+
 <br/>
 
-<img src='VideoRAG_cover.png' />
+
 
  This is the PyTorch implementation for VideoRAG proposed in this paper:
 
@@ -90,7 +92,7 @@ pip install ollama==0.5.3
 
 ### 📥 Model Checkpoints
 
-Download the necessary checkpoints in **the repository's root folder** for MiniCPM-V, Whisper, and ImageBind:
+Download the necessary checkpoints in the **repository root** (the parent of `VideoRAG_algorithm/`), alongside `VideoRAG_algorithm/`, for MiniCPM-V, Whisper, and ImageBind:
 
 ```bash
 # Ensure git-lfs is installed
@@ -111,21 +113,26 @@ cd ../
 
 ### 📁 Directory Structure
 
-Your final directory structure after downloading all checkpoints should look like this:
+Your final layout after downloading checkpoints should look like this (this repo’s layout):
 
 ```shell
-VideoRAG/
+VideoRAG/                              # repository root
 ├── .checkpoints/
 ├── faster-distil-whisper-large-v3/
-├── LICENSE
-├── longervideos/
 ├── MiniCPM-V-2_6-int4/
 ├── README.md
-├── reproduce/
-├── notesbooks/
-├── videorag/
-├── VideoRAG_cover.png
-└── VideoRAG.png
+├── LICENSE
+└── VideoRAG_algorithm/
+    ├── README.md
+    ├── LICENSE
+    ├── longervideos/
+    ├── reproduce/
+    ├── notesbooks/
+    ├── videorag/
+    ├── videorag_longervideos.py
+    ├── examples/
+    ├── VideoRAG_cover.png
+    └── VideoRAG.png
 ```
 
 ## 🚀 Quick Start
@@ -133,9 +140,11 @@ VideoRAG/
 VideoRAG is capable of extracting knowledge from multiple videos and answering queries based on those videos. Now, try VideoRAG with your own videos 🤗.
 
 > [!NOTE]
-> Currently, VideoRAG has only been tested in an English environment. To process videos in multiple languages, it is recommended to modify the  ```WhisperModel``` in [asr.py](https://github.com/HKUDS/VideoRAG/blob/main/videorag/_videoutil/asr.py). For more details, please refer to [faster-whisper](https://github.com/systran/faster-whisper).
+> Currently, VideoRAG has only been tested in an English environment. To process videos in multiple languages, it is recommended to modify the  ```WhisperModel``` in [asr.py](videorag/_videoutil/asr.py). For more details, please refer to [faster-whisper](https://github.com/systran/faster-whisper).
 
-**At first**, let the VideoRAG extract and indexing the knowledge from given videos (Only one GPU with 24GB of memory is sufficient, such as the RTX 3090):
+**Imports:** run Python with `VideoRAG_algorithm` on `PYTHONPATH`, or `cd VideoRAG_algorithm` and use `from videorag import …` as below. From the repo root, some scripts use `from VideoRAG_algorithm.videorag import …` instead.
+
+**At first**, let VideoRAG extract and index knowledge from the given videos (only one GPU with 24GB of memory is sufficient, such as the RTX 3090):
 ```python
 import os
 import logging
@@ -165,7 +174,7 @@ if __name__ == '__main__':
     videorag.insert_video(video_path_list=video_paths)
 ```
 
-**Then**, ask any questions about the videos! Here is an exmaple:
+**Then**, ask any questions about the videos! Here is an example:
 ```python
 import os
 import logging
@@ -190,7 +199,7 @@ if __name__ == '__main__':
     # if param.wo_reference = False, VideoRAG will add reference to video clips in the response
     param.wo_reference = True
 
-    videorag = videorag = VideoRAG(llm=openai_4o_mini_config, working_dir=f"./videorag-workdir")
+    videorag = VideoRAG(llm=openai_4o_mini_config, working_dir=f"./videorag-workdir")
     videorag.load_caption_model(debug=False)
     response = videorag.query(query=query, param=param)
     print(response)
@@ -199,7 +208,7 @@ if __name__ == '__main__':
 ## 🧪 Experiments
 
 ### LongerVideos
-We constructed the LongerVideos benchmark to evaluate the model's performance in comprehending multiple long-context videos and answering open-ended queries. All the videos are open-access videos on YouTube, and we record the URLs of the collections of videos as well as the corresponding queries in the [JSON](https://github.com/HKUDS/VideoRAG/longervideos/dataset.json) file.
+We constructed the LongerVideos benchmark to evaluate the model's performance in comprehending multiple long-context videos and answering open-ended queries. All the videos are open-access videos on YouTube, and we record the URLs of the collections of videos as well as the corresponding queries in [longervideos/dataset.json](longervideos/dataset.json).
 
 | Video Type       | #video list | #video | #query | #avg. queries per list | #overall duration      |
 |------------------|------------:|-------:|-------:|-----------------------:|-------------------------|
@@ -213,7 +222,7 @@ We constructed the LongerVideos benchmark to evaluate the model's performance in
 Here are the commands you can refer to for preparing the videos used in LongerVideos.
 
 ```shell
-cd longervideos
+cd VideoRAG_algorithm/longervideos
 python prepare_data.py # create collection folders
 sh download.sh # obtain videos
 ```
@@ -221,7 +230,8 @@ sh download.sh # obtain videos
 Then, you can run the following example command to process and answer queries for LongerVideos with VideoRAG:
 
 ```shell
-# Please enter your openai_key in line 19 at first
+cd VideoRAG_algorithm
+# Please enter your openai_key in videorag_longervideos.py at first
 python videorag_longervideos.py --collection 4-rag-lecture --cuda 0
 ```
 
@@ -242,7 +252,7 @@ unzip all_answers
 We conduct the win-rate comparison with RAG-based baselines. To reproduce the results, please follow these steps:
 
 ```shell
-cd reproduce/winrate_comparison
+cd VideoRAG_algorithm/reproduce/winrate_comparison
 
 # First Step: Upload the batch request to OpenAI (remember to enter your key in the file, same for the following steps).
 python batch_winrate_eval_upload.py
@@ -263,7 +273,7 @@ python batch_winrate_eval_calculate.py
 We conduct a quantitative comparison, which extends the win-rate comparison by assigning a 5-point score to long-context video understanding methods. We use the answers from NaiveRAG as the baseline response for scoring each query. To reproduce the results, please follow these steps:
 
 ```shell
-cd reproduce/quantitative_comparison
+cd VideoRAG_algorithm/reproduce/quantitative_comparison
 
 # First Step: Upload the batch request to OpenAI (remember to enter your key in the file, same for the following steps).
 python batch_quant_eval_upload.py
@@ -280,8 +290,8 @@ python batch_quant_eval_calculate.py
 
 ## 🦙 Ollama Support
 
-This project also supports ollama.  To use, edit the ollama_config in [_llm.py](https://github.com/HKUDS/VideoRAG/blob/main/videorag/_llm.py).
-Adjust the paramters of the models being used
+This project also supports Ollama. To use it, edit `ollama_config` in [_llm.py](videorag/_llm.py).
+Adjust the parameters of the models being used.
 
 ```
 ollama_config = LLMConfig(
@@ -305,8 +315,7 @@ ollama_config = LLMConfig(
 And specify the config when creating your VideoRag instance
 
 ### Jupyter Notebook
-To  test the solution on a single video, just load the notebook in the [notebook folder](VideoRAG/nodebooks) and
-update the paramters to fit your situation.
+To test on a single video, open [notesbooks/videorag.ipynb](notesbooks/videorag.ipynb) and update the parameters to fit your setup.
 
 ## 📖 Citation
 If you find this work is helpful to your research, please consider citing our paper:
