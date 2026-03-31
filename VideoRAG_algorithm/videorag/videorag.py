@@ -8,7 +8,6 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from functools import partial
 from typing import Callable, Dict, List, Optional, Type, Union, cast
-from transformers import AutoModel, AutoTokenizer
 import tiktoken
 
 
@@ -47,6 +46,7 @@ from .base import (
     StorageNameSpace,
     QueryParam,
 )
+from ._videoutil.caption import load_caption_model_and_tokenizer
 from ._videoutil import(
     split_video,
     speech_to_text,
@@ -121,8 +121,7 @@ class VideoRAG:
     def load_caption_model(self, debug=False):
         # caption model
         if not debug:
-            self.caption_model = AutoModel.from_pretrained('./MiniCPM-V-2_6-int4', trust_remote_code=True)
-            self.caption_tokenizer = AutoTokenizer.from_pretrained('./MiniCPM-V-2_6-int4', trust_remote_code=True)
+            self.caption_model, self.caption_tokenizer = load_caption_model_and_tokenizer()
             self.caption_model.eval()
         else:
             self.caption_model = None

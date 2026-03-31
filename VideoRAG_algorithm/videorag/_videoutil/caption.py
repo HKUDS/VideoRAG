@@ -6,6 +6,50 @@ from tqdm import tqdm
 from transformers import AutoModel, AutoTokenizer
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
+
+def _caption_int4_path():
+    return os.environ.get("VIDEO_RAG_CAPTION_MODEL", "./MiniCPM-V-2_6-int4")
+
+
+def _cpu_caption_dtype():
+    name = os.environ.get("VIDEO_RAG_CAPTION_DTYPE", "float16").lower()
+    if name in ("float16", "half"):
+        return torch.float16
+    if name in ("float32", "fp32"):
+        return torch.float32
+    if name in ("bfloat16", "bf16"):
+        return torch.bfloat16
+    return torch.float16
+
+
+def load_caption_model_and_tokenizer():
+    """
+    INT4 checkpoint uses bitsandbytes and needs CUDA. Without a GPU, load full
+    openbmb/MiniCPM-V-2_6 on CPU (VIDEO_RAG_CAPTION_MODEL_CPU to override).
+    """
+    int4_path = _caption_int4_path()
+    if torch.cuda.is_available():
+        model = AutoModel.from_pretrained(
+            int4_path,
+            trust_remote_code=True,
+            device_map="cuda:0",
+        )
+        tokenizer = AutoTokenizer.from_pretrained(int4_path, trust_remote_code=True)
+        return model, tokenizer
+
+    cpu_id = os.environ.get("VIDEO_RAG_CAPTION_MODEL_CPU", "openbmb/MiniCPM-V-2_6")
+    dtype = _cpu_caption_dtype()
+    model = AutoModel.from_pretrained(
+        cpu_id,
+        trust_remote_code=True,
+        torch_dtype=dtype,
+        device_map="cpu",
+        low_cpu_mem_usage=True,
+    )
+    tokenizer = AutoTokenizer.from_pretrained(cpu_id, trust_remote_code=True)
+    return model, tokenizer
+
+
 def encode_video(video, frame_times):
     frames = []
     for t in frame_times:
@@ -16,8 +60,7 @@ def encode_video(video, frame_times):
     
 def segment_caption(video_name, video_path, segment_index2name, transcripts, segment_times_info, caption_result, error_queue):
     try:
-        model = AutoModel.from_pretrained('./MiniCPM-V-2_6-int4', trust_remote_code=True)
-        tokenizer = AutoTokenizer.from_pretrained('./MiniCPM-V-2_6-int4', trust_remote_code=True)
+        model, tokenizer = load_caption_model_and_tokenizer()
         model.eval()
         
         with VideoFileClip(video_path) as video:
@@ -37,7 +80,8 @@ def segment_caption(video_name, video_path, segment_index2name, transcripts, seg
                     **params
                 )
                 caption_result[index] = segment_caption.replace("\n", "").replace("<|endoftext|>", "")
-                torch.cuda.empty_cache()
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
     except Exception as e:
         error_queue.put(f"Error in segment_caption:\n {str(e)}")
         raise RuntimeError
@@ -83,6 +127,7 @@ def retrieved_segment_caption(caption_model, caption_tokenizer, refine_knowledge
         )
         this_caption = segment_caption.replace("\n", "").replace("<|endoftext|>", "")
         caption_result[this_segment] = f"Caption:\n{this_caption}\nTranscript:\n{segment_transcript}\n\n"
-        torch.cuda.empty_cache()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
     
     return caption_result

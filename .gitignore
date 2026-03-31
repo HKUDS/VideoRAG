@@ -1,0 +1,25 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# NVIDIA CUDA apt keyring installer (local download, not part of the project)
+cuda-keyring*.deb
+
+# Large local model weights (download separately)
+faster-distil-whisper-large-v3/
+MiniCPM-V-2_6-int4/*
+MiniCPM-V-2_6-int4/
+*.safetensors
+*.safetensors.index.json
+# Common PyTorch / HF single-file checkpoints (uncomment if you need to commit other .bin files)
+# *.bin
+
+# Local checkpoints / HF cache under the repo (optional)
+.checkpoints/
+
+# If .safetensors still show in `git status`, Git is still tracking them from an older commit.
+# Stop tracking but keep files on disk, then commit:
+#   git rm -r --cached faster-distil-whisper-large-v3 MiniCPM-V-2_6-int4
+#   git rm --cached path/to/each/file.safetensors

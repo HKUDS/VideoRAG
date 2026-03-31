@@ -1,3 +1,6 @@
+import asyncio
+
+import httpx
 import numpy as np
 
 from openai import AsyncOpenAI, AsyncAzureOpenAI, APIConnectionError, RateLimitError
@@ -194,6 +197,194 @@ openai_4o_mini_config = LLMConfig(
     cheap_model_name = "gpt-4o-mini",
     cheap_model_max_token_size = 32768,
     cheap_model_max_async = 16
+)
+
+
+###### Google Gemini (embedContent + generateContent; single API key)
+def _gemini_embedding_api_key() -> str:
+    key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    if not key:
+        raise ValueError(
+            "Set GEMINI_API_KEY or GOOGLE_API_KEY for Gemini embedContent."
+        )
+    return key
+
+
+def _gemini_output_dimensionality() -> int:
+    return int(os.environ.get("GEMINI_EMBEDDING_DIMENSION", "768"))
+
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=4, max=60),
+    retry=retry_if_exception_type((httpx.HTTPStatusError, httpx.TransportError)),
+)
+async def _gemini_embed_content_request(
+    client: httpx.AsyncClient,
+    url: str,
+    headers: dict,
+    text: str,
+    output_dimensionality: int,
+) -> list[float]:
+    """
+    POST .../models/{id}:embedContent with body matching the Generative Language API.
+    """
+    body = {
+        "content": {"parts": [{"text": text}]},
+        "outputDimensionality": output_dimensionality,
+    }
+    r = await client.post(url, headers=headers, json=body)
+    r.raise_for_status()
+    data = r.json()
+    emb = data.get("embedding") or {}
+    if "values" not in emb:
+        raise RuntimeError(f"Unexpected Gemini embedContent response: {data!r}")
+    return emb["values"]
+
+
+async def gemini_embed_content(model_name: str, texts: list[str]) -> np.ndarray:
+    """
+    One ``embedContent`` call per input string (same endpoint/shape as a working curl).
+    """
+    api_key = _gemini_embedding_api_key()
+    model_id = (model_name or "gemini-embedding-001").split("/")[-1]
+    dim = _gemini_output_dimensionality()
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{model_id}:embedContent"
+    )
+    headers = {"x-goog-api-key": api_key, "Content-Type": "application/json"}
+    gap = float(os.environ.get("GEMINI_EMBED_GAP_SEC", "0"))
+    rows: list[list[float]] = []
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        for i, t in enumerate(texts):
+            rows.append(
+                await _gemini_embed_content_request(client, url, headers, t, dim)
+            )
+            if gap > 0 and i + 1 < len(texts):
+                await asyncio.sleep(gap)
+    return np.array(rows)
+
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=4, max=60),
+    retry=retry_if_exception_type((httpx.HTTPStatusError, httpx.TransportError)),
+)
+async def gemini_generate_content_if_cache(
+    model, prompt, system_prompt=None, history_messages=[], **kwargs
+) -> str:
+    """Gemini ``generateContent`` for chat, entity extraction, and cached prompts."""
+    api_key = _gemini_embedding_api_key()
+    model_id = (model or "gemini-flash-latest").split("/")[-1]
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{model_id}:generateContent"
+    )
+    hashing_kv: BaseKVStorage = kwargs.pop("hashing_kv", None)
+    use_cache = kwargs.pop("use_cache", True)
+
+    messages = []
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
+    messages.extend(history_messages)
+    messages.append({"role": "user", "content": prompt})
+
+    if hashing_kv is not None and use_cache:
+        args_hash = compute_args_hash(model, messages)
+        if_cache_return = await hashing_kv.get_by_id(args_hash)
+        if if_cache_return is not None and if_cache_return["return"] is not None:
+            return if_cache_return["return"]
+
+    contents = []
+    for m in history_messages:
+        role = "model" if m.get("role") == "assistant" else "user"
+        contents.append({"role": role, "parts": [{"text": m["content"]}]})
+    contents.append({"role": "user", "parts": [{"text": prompt}]})
+
+    body: dict = {
+        "contents": contents,
+        "generationConfig": {
+            "temperature": float(kwargs.get("temperature", 0.7)),
+            "maxOutputTokens": int(kwargs.get("max_tokens", 8192)),
+        },
+    }
+    if system_prompt:
+        body["systemInstruction"] = {"parts": [{"text": system_prompt}]}
+
+    headers = {"x-goog-api-key": api_key, "Content-Type": "application/json"}
+    async with httpx.AsyncClient(timeout=180.0) as client:
+        r = await client.post(url, headers=headers, json=body)
+        r.raise_for_status()
+        result = r.json()
+
+    cand = (result.get("candidates") or [{}])[0]
+    parts = (cand.get("content") or {}).get("parts") or []
+    text = "".join(p.get("text", "") for p in parts)
+    if not text and result.get("promptFeedback"):
+        raise RuntimeError(f"Gemini blocked or empty response: {result!r}")
+
+    if hashing_kv is not None and use_cache:
+        await hashing_kv.upsert(
+            {args_hash: {"return": text, "model": model}}
+        )
+        await hashing_kv.index_done_callback()
+    return text
+
+
+async def gemini_completion(
+    model_name, prompt, system_prompt=None, history_messages=[], **kwargs
+) -> str:
+    return await gemini_generate_content_if_cache(
+        model_name,
+        prompt,
+        system_prompt=system_prompt,
+        history_messages=history_messages,
+        **kwargs,
+    )
+
+
+# Hybrid: Gemini embeddings + OpenAI chat (optional if you have OpenAI credits)
+openai_4o_mini_gemini_embed_config = LLMConfig(
+    embedding_func_raw=gemini_embed_content,
+    embedding_model_name=os.environ.get(
+        "GEMINI_EMBEDDING_MODEL", "gemini-embedding-001"
+    ),
+    embedding_dim=_gemini_output_dimensionality(),
+    embedding_max_token_size=8192,
+    embedding_batch_num=32,
+    embedding_func_max_async=int(os.environ.get("GEMINI_EMBEDDING_MAX_ASYNC", "4")),
+    query_better_than_threshold=0.2,
+    best_model_func_raw=gpt_4o_mini_complete,
+    best_model_name="gpt-4o-mini",
+    best_model_max_token_size=32768,
+    best_model_max_async=16,
+    cheap_model_func_raw=gpt_4o_mini_complete,
+    cheap_model_name="gpt-4o-mini",
+    cheap_model_max_token_size=32768,
+    cheap_model_max_async=16,
+)
+
+
+# Default Gemini-only pipeline for construct_graph.py
+gemini_embed_and_chat_config = LLMConfig(
+    embedding_func_raw=gemini_embed_content,
+    embedding_model_name=os.environ.get(
+        "GEMINI_EMBEDDING_MODEL", "gemini-embedding-001"
+    ),
+    embedding_dim=_gemini_output_dimensionality(),
+    embedding_max_token_size=8192,
+    embedding_batch_num=32,
+    embedding_func_max_async=int(os.environ.get("GEMINI_EMBEDDING_MAX_ASYNC", "4")),
+    query_better_than_threshold=0.2,
+    best_model_func_raw=gemini_completion,
+    best_model_name=os.environ.get("GEMINI_LLM_MODEL", "gemini-flash-latest"),
+    best_model_max_token_size=32768,
+    best_model_max_async=int(os.environ.get("GEMINI_LLM_MAX_ASYNC", "4")),
+    cheap_model_func_raw=gemini_completion,
+    cheap_model_name=os.environ.get("GEMINI_LLM_MODEL", "gemini-flash-latest"),
+    cheap_model_max_token_size=32768,
+    cheap_model_max_async=int(os.environ.get("GEMINI_LLM_MAX_ASYNC", "4")),
 )
 
 ###### Azure OpenAI Configuration
@@ -507,4 +698,3 @@ deepseek_bge_config = LLMConfig(
     cheap_model_max_token_size = 32768,
     cheap_model_max_async = 16
 )
-

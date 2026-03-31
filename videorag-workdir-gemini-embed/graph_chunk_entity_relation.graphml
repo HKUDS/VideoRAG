@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d6" for="edge" attr.name="order" attr.type="long" />
+  <key id="d5" for="edge" attr.name="source_id" attr.type="string" />
+  <key id="d4" for="edge" attr.name="description" attr.type="string" />
+  <key id="d3" for="edge" attr.name="weight" attr.type="double" />
+  <key id="d2" for="node" attr.name="source_id" attr.type="string" />
+  <key id="d1" for="node" attr.name="description" attr.type="string" />
+  <key id="d0" for="node" attr.name="entity_type" attr.type="string" />
+  <graph edgedefault="undirected">
+    <node id="&quot;INDOOR SETTING&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"The physical location where the video takes place, described as a dimly lit room or makeshift shelter containing a wooden partition with red curtains and a suitcase."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <node id="&quot;SURVEILLANCE MONITORING&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"An activity involving a camera system that tracks a large animal's movements using a green rectangular outline, indicating a security or observation mission."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <node id="&quot;ANIMAL BEHAVIOR&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"The sequence of actions performed by a large, dark-colored animal as it wakes, stirs, and moves within a confined indoor space."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <node id="&quot;UNIDENTIFIED SPEAKER&quot;">
+      <data key="d0">"PERSON"</data>
+      <data key="d1">"A person heard in the video's transcript who repeatedly expresses uncertainty or a lack of understanding about the unfolding scene."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <node id="&quot;ROOM OR MAKESHIFT SHELTER&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"An indoor location that serves as the setting for the video, characterized by low lighting, a wooden partition, and red curtains."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <node id="&quot;CAMERA SYSTEM&quot;">
+      <data key="d0">"ORGANIZATION"</data>
+      <data key="d1">"The surveillance apparatus responsible for recording the scene and generating a green tracking box to monitor movement."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <node id="&quot;WOODEN PARTITION&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"A structural element within the room featuring vertical slats and red curtains, serving as a backdrop for the animal."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <node id="&quot;ANIMAL STIRRING&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"The initial event of the large animal moving its limbs after a period of being motionless, indicating a return to consciousness."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <node id="&quot;ANIMAL ROLLING OVER&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"A subsequent event where the animal becomes more active, adjusting its position and rolling over on the floor."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <node id="&quot;VIEWER&quot;">
+      <data key="d0">"PERSON"</data>
+      <data key="d1">"The intended audience of the video who must interpret the silent sequence of events and the animal's behavior through visual observation."</data>
+      <data key="d2">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+    </node>
+    <edge source="&quot;INDOOR SETTING&quot;" target="&quot;SURVEILLANCE MONITORING&quot;">
+      <data key="d3">8.0</data>
+      <data key="d4">"The surveillance activity is being conducted within the specific indoor setting described in the video."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;INDOOR SETTING&quot;" target="&quot;ANIMAL BEHAVIOR&quot;">
+      <data key="d3">7.0</data>
+      <data key="d4">"The animal's movements and behavioral changes occur within the physical boundaries of the indoor setting."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;SURVEILLANCE MONITORING&quot;" target="&quot;ANIMAL BEHAVIOR&quot;">
+      <data key="d3">9.0</data>
+      <data key="d4">"The surveillance system is actively tracking and monitoring the animal's behavior and physical movements."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;SURVEILLANCE MONITORING&quot;" target="&quot;UNIDENTIFIED SPEAKER&quot;">
+      <data key="d3">5.0</data>
+      <data key="d4">"The speaker provides audio commentary or a vocal reaction to the events being captured and tracked by the surveillance system."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;ROOM OR MAKESHIFT SHELTER&quot;" target="&quot;CAMERA SYSTEM&quot;">
+      <data key="d3">8.0</data>
+      <data key="d4">"The camera system is positioned to monitor and record the interior of the room or makeshift shelter."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;ROOM OR MAKESHIFT SHELTER&quot;" target="&quot;WOODEN PARTITION&quot;">
+      <data key="d3">7.0</data>
+      <data key="d4">"The wooden partition is a permanent fixture located inside the room or shelter."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;ROOM OR MAKESHIFT SHELTER&quot;" target="&quot;ANIMAL STIRRING&quot;">
+      <data key="d3">6.0</data>
+      <data key="d4">"The event of the animal stirring takes place on the ground within the shelter."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;ROOM OR MAKESHIFT SHELTER&quot;" target="&quot;ANIMAL ROLLING OVER&quot;">
+      <data key="d3">6.0</data>
+      <data key="d4">"The animal's active movement occurs within the confines of the indoor setting."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;CAMERA SYSTEM&quot;" target="&quot;ANIMAL STIRRING&quot;">
+      <data key="d3">9.0</data>
+      <data key="d4">"The camera system detects and highlights the animal's initial stirring through its tracking software."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;CAMERA SYSTEM&quot;" target="&quot;ANIMAL ROLLING OVER&quot;">
+      <data key="d3">9.0</data>
+      <data key="d4">"The camera system continues to focus on and track the animal as it rolls over and increases its activity."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+    <edge source="&quot;ANIMAL ROLLING OVER&quot;" target="&quot;VIEWER&quot;">
+      <data key="d3">5.0</data>
+      <data key="d4">"The viewer observes the animal rolling over and must interpret its significance without audio context."</data>
+      <data key="d5">chunk-d1328a7ba3a82ad71fbbc4c50dfa08af</data>
+      <data key="d6">1</data>
+    </edge>
+  </graph>
+</graphml>
