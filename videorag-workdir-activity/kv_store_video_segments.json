@@ -1,0 +1,30 @@
+{
+  "Amritsar Woman Stops Robbers": {
+    "0": {
+      "content": "Caption:\nThe video depicts a sequence of events in an indoor setting, likely a bedroom or living space with minimalistic furnishings. Initially, the room is shown in its entirety, featuring wooden walls, a bed with patterned bedding, and various items such as a suitcase and a round object on the floor. The lighting suggests daytime with natural light coming through the windows.As the video progresses, there is a noticeable disturbance within the room. A person wearing dark clothing enters the scene from the right side, moving towards the center where the bed is located. This individual appears to be in motion, possibly running or falling, as they approach the bed. Their actions are not clearly visible due to the rapid movement and possible camera shake.Subsequently, the focus shifts closer to the bed area, highlighting the central part of the room where the action takes place. The green box overlays suggest that the camera's tracking system has detected significant movements, indicating that the person may have tripped or fallen onto the bed. The bed's cover shows signs of being disturbed, implying that it was affected by the person's fall.Finally, the video zooms out slightly, providing a broader view of the room again. The bed remains the focal point, but now there is no sign of the person who previously entered the frame. The overall environment appears undisturbed except for the aftermath of the incident involving the person and the bed.Throughout this sequence, the audio consistently states \"I don't know,\" which could indicate uncertainty about the cause or outcome of the events depicted in the video.\nTranscript:\n[0.00s -> 4.00s]  I don't know.\n[4.00s -> 5.00s]  I don't know.\n[5.00s -> 7.00s]  I don't know.\n[7.00s -> 8.00s]  I don't know.\n[8.00s -> 10.00s]  I don't know what I'm\n\n\n",
+      "time": "0-14",
+      "transcript": "[0.00s -> 4.00s]  I don't know.\n[4.00s -> 5.00s]  I don't know.\n[5.00s -> 7.00s]  I don't know.\n[7.00s -> 8.00s]  I don't know.\n[8.00s -> 10.00s]  I don't know what I'm\n",
+      "frame_times": [
+        0.0,
+        2.8,
+        5.6,
+        8.399999999999999,
+        11.2
+      ]
+    }
+  },
+  "Human Activity Recognition I3D Demo 720P": {
+    "0": {
+      "content": "Caption:\nThe video shows a person in a room with wooden cabinets and a patterned rug, performing various exercises. They wear a dark t-shirt with the words \"NO DRINKS\" printed on it, beige shorts, and brown shoes. The sequence starts with the individual standing still, then transitioning into movements such as squatting down, jumping, and doing arm stretches. Throughout the video, text appears at the bottom of each frame, indicating different actions being performed: stretching an arm, dancing in a specific style, pulling up, squatting, and front raises. The background remains consistent, focusing attention on the exercise routine.\nTranscript:\n[0.00s -> 1.00s]  And?\n[1.00s -> 2.00s]  It?\n[30.00s -> 32.00s]  Thank you.\n\n\n",
+      "time": "0-32",
+      "transcript": "[0.00s -> 1.00s]  And?\n[1.00s -> 2.00s]  It?\n[30.00s -> 32.00s]  Thank you.\n",
+      "frame_times": [
+        0.0,
+        6.4,
+        12.8,
+        19.200000000000003,
+        25.6
+      ]
+    }
+  }
+}

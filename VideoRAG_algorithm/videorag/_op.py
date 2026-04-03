@@ -31,6 +31,7 @@ from .prompt import GRAPH_FIELD_SEP, PROMPTS
 from ._videoutil import (
     retrieved_segment_caption,
 )
+from .activity_summarization import extract_activities
 
 def chunking_by_token_size(
     tokens_list: list[list[int]],
@@ -258,6 +259,7 @@ async def _merge_nodes_then_upsert(
     already_entitiy_types = []
     already_source_ids = []
     already_description = []
+    already_activities = []
 
     already_node = await knowledge_graph_inst.get_node(entity_name)
     if already_node is not None:
@@ -266,6 +268,11 @@ async def _merge_nodes_then_upsert(
             split_string_by_multi_markers(already_node["source_id"], [GRAPH_FIELD_SEP])
         )
         already_description.append(already_node["description"])
+        if "activities" in already_node:
+            try:
+                already_activities.extend(json.loads(already_node["activities"]))
+            except Exception:
+                pass
 
     entity_type = sorted(
         Counter(
@@ -283,10 +290,17 @@ async def _merge_nodes_then_upsert(
     description = await _handle_entity_relation_summary(
         entity_name, description, global_config
     )
+
+    merged_activities = set(already_activities)
+    for dp in nodes_data:
+        if "chunk_activities" in dp:
+            merged_activities.update(dp["chunk_activities"])
+
     node_data = dict(
         entity_type=entity_type,
         description=description,
         source_id=source_id,
+        activities=json.dumps(list(merged_activities)),
     )
     await knowledge_graph_inst.upsert_node(
         entity_name,
@@ -385,6 +399,7 @@ async def extract_entities(
         content = chunk_dp["content"]
         hint_prompt = entity_extract_prompt.format(**context_base, input_text=content)
         final_result = await use_llm_func(hint_prompt)
+        chunk_activities = await extract_activities(content, use_llm_func)
 
         history = pack_user_ass_to_openai_messages(hint_prompt, final_result)
         for now_glean_index in range(entity_extract_max_gleaning):
@@ -421,6 +436,7 @@ async def extract_entities(
                 record_attributes, chunk_key
             )
             if if_entities is not None:
+                if_entities["chunk_activities"] = chunk_activities
                 maybe_nodes[if_entities["entity_name"]].append(if_entities)
                 continue
 

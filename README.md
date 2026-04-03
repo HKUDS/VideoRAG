@@ -1,58 +1,47 @@
 <div align="center">
 
-# VideoRAG
+# Activity-Aware VideoRAG Pipeline
 
-**Retrieval-augmented generation for extreme long-context video understanding**
-
-[![arXiv](https://img.shields.io/badge/arXiv-2502.01549-b31b1b)](https://arxiv.org/abs/2502.01549)
-[![Discord](https://img.shields.io/discord/1296348098003734629?label=discord)](https://discord.gg/ZzU55kz3)
+**Retrieval-Augmented Generation for Context-Aware Video Summarization**
 
 </div>
 
-This repository contains the **VideoRAG** research implementation ([paper](https://arxiv.org/abs/2502.01549)), helper scripts at the repo root, and an optional **Vimo Desktop** app for chatting with videos.
+This repository implements a powerful **Activity-Aware Graph Summarization** pipeline. It extends basic Video Retrieval-Augmented Generation (RAG) by representing video-derived insights via an interconnected Knowledge Graph. Rather than executing flat, context-free queries across an entire vector database, the system dynamically clusters entities based on generated activities to build highly accurate, context-bound localized summaries.
 
-## Documentation
+## Core Conceptual Flow
 
-| Doc | Purpose |
-|-----|---------|
-| **[VideoRAG_algorithm/README.md](VideoRAG_algorithm/README.md)** | **Main guide** — installation, dependencies, model checkpoints, quick start, LongerVideos, evaluation, citation |
-| [Vimo-desktop](Vimo-desktop) | Desktop UI (Electron) and app-specific setup |
+The pipeline operates in two major phases:
 
-Algorithm details, conda environment, `pip` installs, and Python examples live under **`VideoRAG_algorithm/`**. Start there to run indexing and queries.
+### Phase 1: Video Extraction & Graph Construction (`construct_graph.py`)
+1. **Video Ingestion & Chunking**: Audio is transcribed using the `faster-distil-whisper-large-v3` model, and visual keyframes are captioned using the `MiniCPM-V-2_6-int4` Vision Language Model. The outputs are binned into text chunks mapped tightly against the video timeline.
+2. **Extraction Engine (LLM)**: An LLM dynamically scans these chunks to identify distinct **Entities**, their inter-node **Relationships**, and their temporal **Activities**.
+3. **Graph Building**: The extracted entities and relationships are stitched into a localized Graph Database. Critically, each entity node's metadata is permanently tagged with the precise dynamic activities found in its respective chunks (e.g., `["running", "speaking"]`).
 
-## Repository layout
+### Phase 2: Activity-Aware Traversals & Summarization (`ask_activity.py`)
+1. **Clustering & Pruning**: The system automatically pulls from the graph and groups entity nodes into localized subsets matching specific activities. Textually, it filters chunk references to structurally process data natively bound to a `target_video_name`.
+2. **Subgraph Traversal**: For each local activity subset, the system selects the most structurally integral nodes using Degree Centrality. It then executes a Breadth-First-Search (BFS) expanding 2 hops outward to retrieve surrounding contextual peripheral nodes.
+3. **Hierarchical Summarization**:
+   - **Local Level**: It maps the filtered nodes exactly back to the source data transcripts and creates a localized summary describing that single activity event.
+   - **Global Level**: It integrates and aggregates every structured localized mini-summary into one final, polished, macro summary describing the combined sequence of events without redundancy.
 
-```
+## Repository Layout
+
+```text
 VideoRAG/
-├── VideoRAG_algorithm/     # Core library (videorag package), benchmarks, reproduce scripts
-├── Vimo-desktop/           # Optional desktop client
-├── construct_graph.py      # Example: index videos (Gemini config in this fork)
-├── ask_graph.py            # Example: query an indexed graph
-├── setup.sh                # Local environment helper (if present)
-├── .checkpoints/           # ImageBind weights (see algorithm README)
-├── MiniCPM-V-2_6-int4/     # Caption model (git LFS / Hugging Face)
-└── faster-distil-whisper-large-v3/   # ASR model
+├── VideoRAG_algorithm/               # Core algorithm library (graph ops, traversal schema, LLM logic)
+├── videos/                           # Target directory for incoming .mp4 video files
+├── construct_graph.py                # Command to process clips and construct the Knowledge Graph
+├── ask_activity.py                   # Command to execute Activity-Aware traversal + text summary
+├── ask_graph.py                      # Auxiliary testing graph query engine
+├── MiniCPM-V-2_6-int4/               # Local repository Vision Language Caption Model
+└── faster-distil-whisper-large-v3/   # Local repository Audio ASR Transcribe Model
 ```
 
-Large model directories are listed in `.gitignore`; download checkpoints as described in [VideoRAG_algorithm/README.md](VideoRAG_algorithm/README.md).
+## Quick Start Guide
 
-## Quick pointer
+1. **Environment Initialization:** Ensure all necessary weights are downloaded to their folders natively and initialize your local conda virtual environment (`conda activate videorag`).
+2. **Setup API Credentials:** Place a `.env` file at the root containing a valid `GEMINI_API_KEY` to grant the algorithm proper extraction capabilities.
+3. **Index your Videos:** Place your desired `.mp4` clip files directly into the `videos/` directory. Target them uniformly from inside the array inside `construct_graph.py` and run `python construct_graph.py` to ingest the stream and build the network.
+4. **Acquire Summaries:** Run `python ask_activity.py` to trigger the localized multi-video filtering querying (`generate_activity_summary(target_video_name="...")`). 
 
-1. Follow **[VideoRAG_algorithm/README.md](VideoRAG_algorithm/README.md)** for environment setup and checkpoints.
-2. Configure API keys / LLM settings as required by your fork (e.g. Gemini or OpenAI in `VideoRAG_algorithm/videorag/_llm.py`).
-3. Run examples from the algorithm package or use the root `construct_graph.py` / `ask_graph.py` with `PYTHONPATH` including this repository root if imports use the `VideoRAG_algorithm` package path.
-
-## Citation
-
-```bibtex
-@article{VideoRAG,
-  title={VideoRAG: Retrieval-Augmented Generation with Extreme Long-Context Videos},
-  author={Ren, Xubin and Xu, Lingrui and Xia, Long and Wang, Shuaiqiang and Yin, Dawei and Huang, Chao},
-  journal={arXiv preprint arXiv:2502.01549},
-  year={2025}
-}
-```
-
-## License
-
-See [LICENSE](LICENSE).
+This architecture allows numerous clips to be indexed into a single working directory while safely shielding extraction traversals to exact individual clip queries automatically!

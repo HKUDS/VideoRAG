@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import logging
 import warnings
 import multiprocessing
@@ -21,11 +25,11 @@ if __name__ == '__main__':
     multiprocessing.set_start_method('spawn', force=True)
 
     video_paths = [
-        'Amritsar Woman Stops Robbers.mp4'
-        #'movies/Spider-Man.mkv',
+        'videos/Amritsar Woman Stops Robbers.mp4',
+        'videos/Human Activity Recognition I3D Demo 720P.mp4'
     ]
     videorag = VideoRAG(
         llm=gemini_embed_and_chat_config,
-        working_dir="./videorag-workdir-gemini-embed",
+        working_dir="./videorag-workdir-activity",
     )
     videorag.insert_video(video_path_list=video_paths)

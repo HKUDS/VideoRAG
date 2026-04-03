@@ -24,6 +24,7 @@ from ._op import (
     videorag_query,
     videorag_query_multiple_choice,
 )
+from .activity_summarization import generate_activity_summary
 from ._storage import (
     JsonKVStorage,
     NanoVectorDBStorage,
@@ -337,6 +338,20 @@ class VideoRAG:
             )
         else:
             raise ValueError(f"Unknown mode {param.mode}")
+        await self._query_done()
+        return response
+
+    def generate_activity_summary(self, target_video_name: str = None):
+        loop = always_get_an_event_loop()
+        return loop.run_until_complete(self.agenerate_activity_summary(target_video_name))
+
+    async def agenerate_activity_summary(self, target_video_name: str = None):
+        response = await generate_activity_summary(
+            self.chunk_entity_relation_graph,
+            self.text_chunks,
+            asdict(self),
+            target_video_name
+        )
         await self._query_done()
         return response
 

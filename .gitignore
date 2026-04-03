@@ -23,3 +23,4 @@ MiniCPM-V-2_6-int4/
 # Stop tracking but keep files on disk, then commit:
 #   git rm -r --cached faster-distil-whisper-large-v3 MiniCPM-V-2_6-int4
 #   git rm --cached path/to/each/file.safetensors
+*.env

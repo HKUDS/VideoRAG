@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d7" for="edge" attr.name="order" attr.type="long" />
+  <key id="d6" for="edge" attr.name="source_id" attr.type="string" />
+  <key id="d5" for="edge" attr.name="description" attr.type="string" />
+  <key id="d4" for="edge" attr.name="weight" attr.type="double" />
+  <key id="d3" for="node" attr.name="activities" attr.type="string" />
+  <key id="d2" for="node" attr.name="source_id" attr.type="string" />
+  <key id="d1" for="node" attr.name="description" attr.type="string" />
+  <key id="d0" for="node" attr.name="entity_type" attr.type="string" />
+  <graph edgedefault="undirected">
+    <node id="&quot;PERSON IN DARK CLOTHING&quot;">
+      <data key="d0">"PERSON"</data>
+      <data key="d1">"An individual wearing dark attire who enters the indoor scene from the right and moves rapidly toward the bed, appearing to trip or fall onto it."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;UNIDENTIFIED SPEAKER&quot;">
+      <data key="d0">"PERSON"</data>
+      <data key="d1">"The individual whose voice is recorded in the transcript, repeatedly stating 'I don't know,' expressing uncertainty regarding the events occurring in the video."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;MINIMALISTIC INDOOR SPACE&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"The setting of the video, which features wooden walls, a bed with patterned bedding, a suitcase, and natural light, likely serving as a bedroom or living area."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;FALLING INCIDENT&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"The sequence of events where a person enters a room, moves quickly, and falls or trips onto a bed, causing a visible disturbance to the furniture."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;THE BED&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"A piece of furniture with patterned bedding located in the center of the room, serving as the focal point of the action and the landing spot for the person."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;RIGHT SIDE OF THE ROOM&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"The specific area of the indoor setting from which the person in dark clothing first enters the camera's frame."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;CENTER OF THE ROOM&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"The central location within the indoor space where the bed is situated and the primary incident occurs."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;WINDOWS&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"Openings in the room's structure that allow natural daytime light to illuminate the scene."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;WOODEN WALLS&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"The structural walls of the indoor space that define its minimalistic aesthetic and boundaries."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;VIDEO SEQUENCE&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"The entire recorded progression of events, capturing the room's initial state, the person's movement, and the final aftermath."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;ENTRY INTO THE SCENE&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"The initial event where the person in dark clothing becomes visible, appearing from the right side of the frame."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;MOVEMENT TOWARDS THE BED&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"The rapid physical action of the person moving from the entry point toward the central bed area."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;AFTERMATH OF THE INCIDENT&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"The final state of the room depicted in the video, showing the disturbed bed after the person has exited the frame."</data>
+      <data key="d2">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d3">["moving towards the bed", "running", "speaking", "disturbing the bed cover", "entering the room", "falling", "tripping"]</data>
+    </node>
+    <node id="&quot;EXERCISING INDIVIDUAL&quot;">
+      <data key="d0">"PERSON"</data>
+      <data key="d1">"An individual wearing a dark 'NO DRINKS' t-shirt, beige shorts, and brown shoes, who is the primary subject of the video performing physical exercises."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;EXERCISE ROOM&quot;">
+      <data key="d0">"GEO"</data>
+      <data key="d1">"A room featuring wooden cabinets and a patterned rug, serving as the physical setting for the exercise video."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;EXERCISE ROUTINE&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"A sequence of physical movements performed by an individual, including squatting, jumping, arm stretches, dancing, pulling up, and front raises."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;THE VIDEO&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"The visual recording that captures the exercising individual's routine, including the background setting and on-screen instructional text."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;SQUATTING&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"A physical exercise movement performed by the individual and identified by on-screen text, involving lowering the hips from a standing position."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;JUMPING&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"An active movement performed by the individual during the exercise sequence, as described in the video caption."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;ARM STRETCHES&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"A series of movements focused on extending the arms, performed by the individual and noted by the video's descriptive text."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;DANCING&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"A rhythmic activity performed in a specific style by the individual as part of the workout routine."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;PULLING UP&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"An exercise action performed by the individual, specifically highlighted by the text appearing at the bottom of the video frame."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;FRONT RAISES&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"A specific exercise movement targeting the shoulders, performed by the individual and labeled in the video."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <node id="&quot;CLOSING REMARKS&quot;">
+      <data key="d0">"EVENT"</data>
+      <data key="d1">"A brief verbal conclusion to the video where the individual says 'Thank you' to the audience."</data>
+      <data key="d2">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d3">["standing still", "squatting", "arm stretches", "front raises", "dancing", "pulling up", "jumping"]</data>
+    </node>
+    <edge source="&quot;PERSON IN DARK CLOTHING&quot;" target="&quot;FALLING INCIDENT&quot;">
+      <data key="d4">10.0</data>
+      <data key="d5">"The person in dark clothing is the primary participant who experiences the fall onto the bed."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;PERSON IN DARK CLOTHING&quot;" target="&quot;MINIMALISTIC INDOOR SPACE&quot;">
+      <data key="d4">8.0</data>
+      <data key="d5">"The person is physically present and moves within the indoor space during the recorded sequence."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;PERSON IN DARK CLOTHING&quot;" target="&quot;UNIDENTIFIED SPEAKER&quot;">
+      <data key="d4">6.0</data>
+      <data key="d5">"The speaker's audio is layered over the visual of the person in dark clothing, reflecting on their actions or the situation."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;PERSON IN DARK CLOTHING&quot;" target="&quot;MOVEMENT TOWARDS THE BED&quot;">
+      <data key="d4">10.0</data>
+      <data key="d5">"The person in dark clothing is the active participant performing the movement toward the bed."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;PERSON IN DARK CLOTHING&quot;" target="&quot;ENTRY INTO THE SCENE&quot;">
+      <data key="d4">10.0</data>
+      <data key="d5">"The person in dark clothing is the individual who initiates the entry event."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;UNIDENTIFIED SPEAKER&quot;" target="&quot;FALLING INCIDENT&quot;">
+      <data key="d4">7.0</data>
+      <data key="d5">"The speaker provides a vocal reaction or commentary that expresses uncertainty about the cause or outcome of the falling incident."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;MINIMALISTIC INDOOR SPACE&quot;" target="&quot;FALLING INCIDENT&quot;">
+      <data key="d4">9.0</data>
+      <data key="d5">"The falling incident takes place within the confines of the minimalistic indoor space, specifically on the bed."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;MINIMALISTIC INDOOR SPACE&quot;" target="&quot;VIDEO SEQUENCE&quot;">
+      <data key="d4">10.0</data>
+      <data key="d5">"The video sequence provides a comprehensive visual documentation of the indoor setting."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;MINIMALISTIC INDOOR SPACE&quot;" target="&quot;WINDOWS&quot;">
+      <data key="d4">8.0</data>
+      <data key="d5">"The windows are an integrated architectural feature of the indoor space."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;MINIMALISTIC INDOOR SPACE&quot;" target="&quot;WOODEN WALLS&quot;">
+      <data key="d4">8.0</data>
+      <data key="d5">"The wooden walls constitute the physical structure of the indoor setting."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;FALLING INCIDENT&quot;" target="&quot;AFTERMATH OF THE INCIDENT&quot;">
+      <data key="d4">10.0</data>
+      <data key="d5">"The aftermath is the direct consequence and concluding phase of the falling incident."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;FALLING INCIDENT&quot;" target="&quot;VIDEO SEQUENCE&quot;">
+      <data key="d4">10.0</data>
+      <data key="d5">"The video sequence is the medium through which the falling incident is recorded and observed."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;THE BED&quot;" target="&quot;AFTERMATH OF THE INCIDENT&quot;">
+      <data key="d4">9.0</data>
+      <data key="d5">"The aftermath is visually defined by the signs of disturbance left on the bed's cover."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;THE BED&quot;" target="&quot;CENTER OF THE ROOM&quot;">
+      <data key="d4">10.0</data>
+      <data key="d5">"The bed is the primary object located within the center of the room."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;RIGHT SIDE OF THE ROOM&quot;" target="&quot;ENTRY INTO THE SCENE&quot;">
+      <data key="d4">9.0</data>
+      <data key="d5">"The entry event occurs specifically at the right side of the room's spatial layout."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;CENTER OF THE ROOM&quot;" target="&quot;MOVEMENT TOWARDS THE BED&quot;">
+      <data key="d4">9.0</data>
+      <data key="d5">"The movement event is a transition from the periphery to the center of the room."</data>
+      <data key="d6">chunk-4caf060e6177c49bbb4a5889791f2356</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;EXERCISING INDIVIDUAL&quot;" target="&quot;EXERCISE ROOM&quot;">
+      <data key="d4">9.0</data>
+      <data key="d5">"The individual is located within the exercise room while performing their routine."</data>
+      <data key="d6">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;EXERCISING INDIVIDUAL&quot;" target="&quot;EXERCISE ROUTINE&quot;">
+      <data key="d4">10.0</data>
+      <data key="d5">"The individual is the active participant performing the various movements that comprise the exercise routine."</data>
+      <data key="d6">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d7">1</data>
+    </edge>
+    <edge source="&quot;EXERCISE ROOM&quot;" target="&quot;EXERCISE ROUTINE&quot;">
+      <data key="d4">8.0</data>
+      <data key="d5">"The exercise routine takes place within the specific environment of the room."</data>
+      <data key="d6">chunk-2a86ef2d9a86a1ab86aa21416a23eaef</data>
+      <data key="d7">1</data>
+    </edge>
+  </graph>
+</graphml>
