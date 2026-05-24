@@ -281,7 +281,7 @@ python batch_quant_eval_calculate.py
 ## 🦙 Ollama Support
 
 This project also supports ollama.  To use, edit the ollama_config in [_llm.py](https://github.com/HKUDS/VideoRAG/blob/main/videorag/_llm.py).
-Adjust the paramters of the models being used
+Adjust the parameters of the models being used
 
 ```
 ollama_config = LLMConfig(
@@ -306,7 +306,7 @@ And specify the config when creating your VideoRag instance
 
 ### Jupyter Notebook
 To  test the solution on a single video, just load the notebook in the [notebook folder](VideoRAG/nodebooks) and
-update the paramters to fit your situation.
+update the parameters to fit your situation.
 
 ## 📖 Citation
 If you find this work is helpful to your research, please consider citing our paper:
