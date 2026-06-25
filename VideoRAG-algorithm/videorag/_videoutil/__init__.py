@@ -1,4 +1,4 @@
 from .split import split_video, saving_video_segments
 from .asr import speech_to_text
-from .caption import segment_caption, merge_segment_information, retrieved_segment_caption
-from .feature import encode_video_segments, encode_string_query
+from .caption import segment_caption, merge_segment_information, retrieved_segment_caption, tl_segment_caption
+from .feature import encode_video_segments, encode_string_query, tl_encode_video_segments, tl_encode_string_query

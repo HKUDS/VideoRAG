@@ -84,5 +84,29 @@ def retrieved_segment_caption(caption_model, caption_tokenizer, refine_knowledge
         this_caption = segment_caption.replace("\n", "").replace("<|endoftext|>", "")
         caption_result[this_segment] = f"Caption:\n{this_caption}\nTranscript:\n{segment_transcript}\n\n"
         torch.cuda.empty_cache()
-    
+
     return caption_result
+
+
+# ---------------------------------------------------------------------------
+# TwelveLabs Pegasus captioning (optional, cloud-based alternative to MiniCPM-V)
+#
+# Pegasus reads the video pixels directly (no frame sampling here) and returns a
+# natural-language description, so it can replace the local MiniCPM-V caption
+# model for clip-level captioning / QA. ``video`` is a TwelveLabs VideoContext
+# (e.g. a public URL or an uploaded asset id). This avoids the local GPU /
+# MiniCPM-V checkpoint requirement for captioning.
+# ---------------------------------------------------------------------------
+def tl_segment_caption(client, video, prompt: str, model_name: str = "pegasus1.5", max_tokens: int = 2048):
+    """Caption / analyze a single video clip with Pegasus.
+
+    Returns the cleaned caption string, matching the post-processing applied to
+    the MiniCPM-V captions above.
+    """
+    result = client.analyze(
+        model_name=model_name,
+        video=video,
+        prompt=prompt,
+        max_tokens=max_tokens,
+    )
+    return result.data.replace("\n", "").replace("<|endoftext|>", "")
