@@ -25,6 +25,7 @@
 - [🚀 Quick Start](#-quick-start)
 - [🧪 Experiments](#-experiments)
 - [🦙 Ollama Support](#-ollama-support)
+- [☁️ TwelveLabs Support](#️-twelvelabs-support)
 - [📖 Citation](#-citation)
 - [🙏 Acknowledgement](#-acknowledgement)
 
@@ -86,6 +87,9 @@ pip install ctranslate2==4.4.0 faster_whisper==1.0.3 neo4j hnswlib xxhash nano-v
 pip install transformers==4.37.1
 pip install tiktoken openai tenacity
 pip install ollama==0.5.3
+
+# (Optional) TwelveLabs cloud video understanding — Marengo embeddings + Pegasus captioning
+pip install twelvelabs>=1.2.8
 ```
 
 ### 📥 Model Checkpoints
@@ -307,6 +311,57 @@ And specify the config when creating your VideoRag instance
 ### Jupyter Notebook
 To  test the solution on a single video, just load the notebook in the [notebook folder](VideoRAG/nodebooks) and
 update the paramters to fit your situation.
+
+## ☁️ TwelveLabs Support
+
+VideoRAG can optionally use [TwelveLabs](https://twelvelabs.io) for the visual
+retrieval layer and for clip-level captioning, instead of the local ImageBind /
+MiniCPM-V models. This removes the local GPU requirement for those two steps. It
+is **fully opt-in** — the defaults are unchanged.
+
+- **Marengo** produces video-segment and text-query embeddings in a shared
+  512-d space, so it is a drop-in replacement for the ImageBind visual index.
+- **Pegasus** reads the video directly and returns a natural-language caption /
+  answer, replacing MiniCPM-V for clip-level captioning / QA.
+
+Install the SDK and export your key (a generous free tier is available):
+
+```bash
+pip install twelvelabs>=1.2.8
+export TWELVELABS_API_KEY="your-key"   # grab one at https://twelvelabs.io
+```
+
+Use Marengo for the visual segment index by swapping the segment feature store
+when you create your `VideoRAG` instance (Marengo embeddings are 512-d):
+
+```python
+from videorag import VideoRAG
+from videorag._llm import openai_4o_mini_config
+from videorag._storage import TwelveLabsVideoSegmentStorage
+
+videorag = VideoRAG(
+    llm=openai_4o_mini_config,
+    vs_vector_db_storage_cls=TwelveLabsVideoSegmentStorage,
+    video_embedding_dim=512,
+    working_dir="./videorag-workdir",
+)
+```
+
+For Pegasus captioning of an individual clip (e.g. a public URL or an uploaded
+asset id):
+
+```python
+from twelvelabs import TwelveLabs
+from twelvelabs.types import VideoContext_Url
+from videorag._videoutil import tl_segment_caption
+
+client = TwelveLabs(api_key="...")
+caption = tl_segment_caption(
+    client,
+    VideoContext_Url(url="https://example.com/clip.mp4"),
+    prompt="Describe what happens in this clip.",
+)
+```
 
 ## 📖 Citation
 If you find this work is helpful to your research, please consider citing our paper:
