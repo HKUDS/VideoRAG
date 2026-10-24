@@ -234,5 +234,4 @@ class NetworkXStorage(BaseGraphStorage):
             **self.global_config["node2vec_params"],
         )
 
-        nodes_ids = [self._graph.nodes[node_id]["id"] for node_id in nodes]
-        return embeddings, nodes_ids
+        return embeddings, list(nodes)
