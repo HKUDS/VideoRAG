@@ -151,7 +151,7 @@ class Neo4jStorage(BaseGraphStorage):
     ) -> Union[list[tuple[str, str]], None]:
         async with self.async_driver.session() as session:
             result = await session.run(
-                f"MATCH (s:{self.namespace})-[r]->(t:{self.namespace}) WHERE s.id = $source_id "
+                f"MATCH (s:{self.namespace})-[r]-(t:{self.namespace}) WHERE s.id = $source_id "
                 "RETURN s.id AS source, t.id AS target",
                 source_id=source_node_id,
             )
