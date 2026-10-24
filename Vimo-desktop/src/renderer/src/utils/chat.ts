@@ -1,4 +1,5 @@
 import { Message } from '../types/chat';
+import { persistSession } from './persist-session';
 
 /**
  * Format file size
@@ -64,10 +65,16 @@ export const addMessage = async (chatId: string, newMessage: Message): Promise<v
         lastUpdated: new Date(),
       };
       
-      await window.api.chatSessions.save(chatId, updatedSession);
-      
-      // Step 4: Trigger frontend interface refresh
-      window.dispatchEvent(new CustomEvent('chat-messages-updated', { detail: { chatId } }));
+      // Notify listeners only after the session file was saved successfully.
+      await persistSession(
+        window.api.chatSessions.save,
+        chatId,
+        updatedSession,
+        () =>
+          window.dispatchEvent(
+            new CustomEvent('chat-messages-updated', { detail: { chatId } }),
+          ),
+      );
     } catch (error) {
       console.error('Failed to add message:', error);
     }
@@ -96,10 +103,16 @@ export const updateMessage = async (chatId: string, messageId: string, updates: 
         lastUpdated: new Date(),
       };
       
-      await window.api.chatSessions.save(chatId, updatedSession);
-      
-      // Step 4: Trigger frontend interface refresh
-      window.dispatchEvent(new CustomEvent('chat-messages-updated', { detail: { chatId } }));
+      // Notify listeners only after the session file was saved successfully.
+      await persistSession(
+        window.api.chatSessions.save,
+        chatId,
+        updatedSession,
+        () =>
+          window.dispatchEvent(
+            new CustomEvent('chat-messages-updated', { detail: { chatId } }),
+          ),
+      );
     } catch (error) {
       console.error('Failed to update message:', error);
     }
@@ -135,10 +148,15 @@ export const saveMessages = async (chatId: string, messages: Message[]): Promise
         lastUpdated: new Date(),
       };
       
-      await window.api.chatSessions.save(chatId, updatedSession);
-      
-      // Trigger frontend interface refresh
-      window.dispatchEvent(new CustomEvent('chat-messages-updated', { detail: { chatId } }));
+      await persistSession(
+        window.api.chatSessions.save,
+        chatId,
+        updatedSession,
+        () =>
+          window.dispatchEvent(
+            new CustomEvent('chat-messages-updated', { detail: { chatId } }),
+          ),
+      );
     } catch (error) {
       console.error('Failed to save messages:', error);
     }
@@ -203,7 +221,7 @@ export const updateSessionLastMessage = async (chatId: string, lastMessage: stri
           lastMessage: lastMessage.length > 50 ? lastMessage.substring(0, 50) + '...' : lastMessage,
           lastUpdated: new Date(),
         };
-        await window.api.chatSessions.save(chatId, updatedSession);
+        await persistSession(window.api.chatSessions.save, chatId, updatedSession);
       }
     } catch (error) {
       console.error('Failed to update session last message:', error);
