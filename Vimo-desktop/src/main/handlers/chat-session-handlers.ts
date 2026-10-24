@@ -57,10 +57,10 @@ async function loadSessionOrder(): Promise<string[]> {
 }
 
 // Unified session order update function
-async function updateSessionOrder(sessionIds: string[], operation: 'create' | 'delete' | 'reorder' = 'reorder'): Promise<void> {
+async function updateSessionOrder(sessionIds: string[], operation: 'create' | 'delete' | 'reorder' = 'reorder'): Promise<string | null> {
   try {
     const configPath = await getSessionOrderConfigPath();
-    if (!configPath) return;
+    if (!configPath) return 'Storage directory not configured';
     
     await ensureStorageDirectory();
     
@@ -111,9 +111,12 @@ async function updateSessionOrder(sessionIds: string[], operation: 'create' | 'd
     
     await writeFile(configPath, JSON.stringify(config, null, 2), 'utf-8');
     console.log(`✅ Session order updated (${operation}):`, newOrder.length, 'sessions');
+    return null;
     
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('Failed to update session order:', error);
+    return errorMessage;
   }
 }
 
@@ -288,7 +291,10 @@ export function registerChatSessionHandlers(): void {
   // Unified session order update handler
   ipcMain.handle('update-session-order', async (_, sessionIds: string[], operation: 'create' | 'delete' | 'reorder' = 'reorder') => {
     try {
-      await updateSessionOrder(sessionIds, operation);
+      const error = await updateSessionOrder(sessionIds, operation);
+      if (error !== null) {
+        return { success: false, error };
+      }
       return { success: true };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
