@@ -433,7 +433,7 @@ Please note that there is only one choice is correct.
 ---Notice---
 Please provide your answer in JSON format as follows:
 {{
-    "Answer": "The label of the answer, like A/B/C/D or 1/2/3/4 or others, depending on the given query"
+    "Answer": "The label of the answer, like A/B/C/D or 1/2/3/4 or others, depending on the given query",
     "Explanation": "Provide explanations for your choice. Use sections and commentary as needed to ensure clarity and depth. Format the response in Markdown."
 }}
 Key points:
