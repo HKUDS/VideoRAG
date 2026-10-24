@@ -3,6 +3,7 @@ import { Video } from 'lucide-react';
 import { Message } from '../../types/chat';
 import { ChatProgressBar } from './ChatProgressBar';
 import vimoLogo from '../../assets/images/vimi-logo.png';
+import { shouldFollowMessages } from '../../utils/scroll-follow';
 
 interface MessageListProps {
   messages: Message[];
@@ -11,13 +12,31 @@ interface MessageListProps {
 
 export const MessageList = ({ messages, isLoading }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const shouldFollowRef = useRef(true);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (shouldFollowRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
+  const handleMessagesScroll = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    shouldFollowRef.current = shouldFollowMessages(
+      container.scrollHeight,
+      container.scrollTop,
+      container.clientHeight,
+    );
+  };
+
   return (
-    <div className="h-full overflow-y-auto px-4 pt-20 pb-6">
+    <div
+      ref={messagesContainerRef}
+      onScroll={handleMessagesScroll}
+      className="h-full overflow-y-auto px-4 pt-20 pb-6"
+    >
       <div className="max-w-3xl mx-auto transition-all duration-300">
         {messages.map((message) => (
           <div key={message.id} className="mb-6">
