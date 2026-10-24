@@ -154,9 +154,9 @@ export function startVideoRAGService(): Promise<boolean> {
               updateAPIBaseURL(foundPort)
               initializeVideoRAGConfig()
                 .then(() => safeResolve(true))
-                .catch(() => {
-                  console.error('Configuration initialization failed, but service is running')
-                  safeResolve(true) // Service started, even if configuration fails
+                .catch((error) => {
+                  console.error('VideoRAG configuration initialization failed', error)
+                  safeReject(error instanceof Error ? error : new Error(String(error)))
                 })
               return
             }
