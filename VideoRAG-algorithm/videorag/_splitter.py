@@ -87,8 +87,9 @@ class SeparatorSplitter:
             else:
                 overlap = chunks[i-1][-self._chunk_overlap:]
                 new_chunk = overlap + chunk
-                if self._length_function(new_chunk) > self._chunk_size:
-                    new_chunk = new_chunk[:self._chunk_size]
+                while overlap and self._length_function(new_chunk) > self._chunk_size:
+                    overlap = overlap[1:]
+                    new_chunk = overlap + chunk
                 result.append(new_chunk)
         return result
 
