@@ -65,9 +65,9 @@ def retrieved_segment_caption(caption_model, caption_tokenizer, refine_knowledge
         video_path = video_path_db._data[video_name]
         timestamp = video_segments._data[video_name][index]["time"].split('-')
         start, end = eval(timestamp[0]), eval(timestamp[1])
-        video = VideoFileClip(video_path)
         frame_times = np.linspace(start, end, num_sampled_frames, endpoint=False)
-        video_frames = encode_video(video, frame_times)
+        with VideoFileClip(video_path) as video:
+            video_frames = encode_video(video, frame_times)
         segment_transcript = video_segments._data[video_name][index]["transcript"]
         # query = f"The transcript of the current video:\n{segment_transcript}.\nGiven a question: {query}, you have to extract relevant information from the video and transcript for answering the question."
         query = f"The transcript of the current video:\n{segment_transcript}.\nNow provide a very detailed description (caption) of the video in English and extract relevant information about: {refine_knowledge}'"
