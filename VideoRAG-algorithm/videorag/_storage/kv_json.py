@@ -19,7 +19,13 @@ class JsonKVStorage(BaseKVStorage):
         return list(self._data.keys())
 
     async def index_done_callback(self):
-        write_json(self._data, self._file_name)
+        temporary_file = f"{self._file_name}.tmp"
+        try:
+            write_json(self._data, temporary_file)
+            os.replace(temporary_file, self._file_name)
+        finally:
+            if os.path.exists(temporary_file):
+                os.remove(temporary_file)
 
     async def get_by_id(self, id):
         return self._data.get(id, None)
