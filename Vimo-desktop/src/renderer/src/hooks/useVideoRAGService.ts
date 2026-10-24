@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { preserveServiceStateOnStopFailure } from '../lib/service-state'
 
 
 
@@ -106,19 +107,15 @@ export const useVideoRAGService = () => {
         // API returns success means service stopped successfully, no additional check needed
         return true
       } else {
-        setServiceState(prev => ({
-          ...prev,
-          isRunning: false,
-          error: result.error
-        }))
+        setServiceState(prev =>
+          preserveServiceStateOnStopFailure(prev, result.error)
+        )
         return false
       }
     } catch (error) {
-      setServiceState(prev => ({
-        ...prev,
-        isRunning: false,
-        error: 'Failed to stop service'
-      }))
+      setServiceState(prev =>
+        preserveServiceStateOnStopFailure(prev, 'Failed to stop service')
+      )
       return false
     } finally {
       setLoading(prev => ({ ...prev, stopping: false }))
