@@ -54,6 +54,7 @@ from ._videoutil import(
     merge_segment_information,
     saving_video_segments,
 )
+from ._videoutil.paths import video_name_from_path
 
 
 @dataclass
@@ -203,7 +204,7 @@ class VideoRAG:
         loop = always_get_an_event_loop()
         for video_path in video_path_list:
             # Step0: check the existence
-            video_name = os.path.basename(video_path).split('.')[0]
+            video_name = video_name_from_path(video_path)
             if video_name in self.video_segments._data:
                 logger.info(f"Find the video named {os.path.basename(video_path)} in storage and skip it.")
                 continue
