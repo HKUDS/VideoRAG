@@ -69,9 +69,18 @@ class HNSWVectorStorage(BaseVectorStorage):
             logger.warning("You insert an empty data to vector DB")
             return []
 
-        if self._current_elements + len(data) > self.max_elements:
+        ids = np.fromiter(
+            (xxhash.xxh32_intdigest(key.encode()) for key in data),
+            dtype=np.uint32,
+            count=len(data),
+        )
+        existing_ids = {int(id_int) for id_int in self._metadata}
+        incoming_ids = {int(id_int) for id_int in ids}
+        new_element_count = len(incoming_ids - existing_ids)
+        if self._current_elements + new_element_count > self.max_elements:
             raise ValueError(
-                f"Cannot insert {len(data)} elements. Current: {self._current_elements}, Max: {self.max_elements}"
+                f"Cannot insert {new_element_count} new elements. "
+                f"Current: {self._current_elements}, Max: {self.max_elements}"
             )
 
         list_data = [
@@ -92,11 +101,6 @@ class HNSWVectorStorage(BaseVectorStorage):
             )
         )
 
-        ids = np.fromiter(
-            (xxhash.xxh32_intdigest(d["id"].encode()) for d in list_data),
-            dtype=np.uint32,
-            count=len(list_data),
-        )
         self._metadata.update(
             {
                 id_int: {
