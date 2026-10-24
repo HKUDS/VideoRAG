@@ -209,9 +209,23 @@ const InitializationWizard: React.FC<InitializationWizardProps> = ({ onComplete 
       initializedAt: new Date().toISOString()
     };
     
-    await window.api.saveSettings(settings);
+    try {
+      const saveResult = await window.api.saveSettings(settings);
+      if (!saveResult.success) {
+        alert(
+          `Failed to save initialization settings: ${saveResult.error || 'Unknown error'}`,
+        );
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to save initialization settings:', error);
+      alert(
+        `Failed to save initialization settings: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      return;
+    }
     
-    // Trigger configuration update event, notify sidebar to reload sessions
+    // Trigger configuration update event only after settings are saved.
     const event = new CustomEvent('storage-config-updated', {
       detail: { storeDirectory }
     });
