@@ -6,6 +6,7 @@ from tqdm import tqdm
 from moviepy.video import fx as vfx
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from .._utils import logger
+from .paths import video_name_from_path
 
 def split_video(
     video_path,
@@ -15,7 +16,7 @@ def split_video(
     audio_output_format='mp3',
 ):  
     unique_timestamp = str(int(time.time() * 1000))
-    video_name = os.path.basename(video_path).split('.')[0]
+    video_name = video_name_from_path(video_path)
     video_segment_cache_path = os.path.join(working_dir, '_cache', video_name)
     if os.path.exists(video_segment_cache_path):
         shutil.rmtree(video_segment_cache_path)
