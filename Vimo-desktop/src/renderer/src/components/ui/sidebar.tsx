@@ -16,6 +16,8 @@ const SidebarContext = React.createContext<{
   setOpen: (open: boolean) => void;
   toggleSidebar: () => void;
   width: number;
+  minWidth: number;
+  maxWidth: number;
   setWidth: (width: number) => void;
 } | null>(null);
 
@@ -68,6 +70,8 @@ function SidebarProvider({
       setOpen,
       toggleSidebar,
       width,
+      minWidth,
+      maxWidth,
       setWidth: (newWidth: number) => {
         const clampedWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
         setWidth(clampedWidth);
@@ -97,7 +101,7 @@ function SidebarProvider({
 
 // 拖拽调整组件
 function SidebarResizer() {
-  const { setWidth } = useSidebar();
+  const { width, minWidth, maxWidth, setWidth } = useSidebar();
   const [isDragging, setIsDragging] = React.useState(false);
 
   const handleMouseDown = React.useCallback((e: React.MouseEvent) => {
@@ -126,13 +130,46 @@ function SidebarResizer() {
     };
   }, [isDragging, setWidth]);
 
+  const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    let nextWidth: number;
+    switch (e.key) {
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        nextWidth = width - 16;
+        break;
+      case 'ArrowRight':
+      case 'ArrowUp':
+        nextWidth = width + 16;
+        break;
+      case 'Home':
+        nextWidth = minWidth;
+        break;
+      case 'End':
+        nextWidth = maxWidth;
+        break;
+      default:
+        return;
+    }
+
+    e.preventDefault();
+    setWidth(nextWidth);
+  }, [width, minWidth, maxWidth, setWidth]);
+
   return (
     <div
+      role="separator"
+      aria-orientation="vertical"
+      aria-valuemin={minWidth}
+      aria-valuemax={maxWidth}
+      aria-valuenow={width}
+      aria-label="Resize sidebar"
+      tabIndex={0}
       className={cn(
-        'absolute right-0 top-0 bottom-0 w-2 cursor-col-resize bg-transparent hover:bg-blue-500/30 transition-all duration-200 group',
+        'absolute right-0 top-0 bottom-0 w-2 cursor-col-resize bg-transparent hover:bg-blue-500/30 transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
         isDragging && 'bg-blue-500/50',
       )}
       onMouseDown={handleMouseDown}
+      onKeyDown={handleKeyDown}
       style={{ zIndex: 50 }}
     >
       <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gray-300 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
