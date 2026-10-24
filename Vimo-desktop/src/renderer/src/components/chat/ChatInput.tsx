@@ -2,6 +2,7 @@ import React from 'react';
 import { Send, GripHorizontal } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useServiceContext } from '../../contexts/ServiceContext';
+import { shouldSubmitOnEnter } from '../../utils/chat-input';
 
 interface ChatInputProps {
   inputValue: string;
@@ -33,8 +34,8 @@ export const ChatInput = ({
   
 
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey && !isInputDisabled) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (shouldSubmitOnEnter(e) && !isInputDisabled) {
       e.preventDefault();
       onSendMessage();
     }
@@ -73,7 +74,7 @@ export const ChatInput = ({
               <textarea
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
                 placeholder={
                   isAnalyzing 
                     ? "Please wait, analyzing your video..." 
