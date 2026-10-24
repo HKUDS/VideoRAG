@@ -28,17 +28,11 @@ export function registerSettingsHandlers(): void {
   // Save settings handler
   ipcMain.handle('save-settings', async (_, settings: any) => {
     try {
-      // If storeDirectory is being set, save it to bootstrap config
-      if (settings.storeDirectory) {
-        await writeFile(
-          BOOTSTRAP_CONFIG_FILE, 
-          JSON.stringify({ storeDirectory: settings.storeDirectory }, null, 2), 
-          'utf-8'
-        );
-      }
-
-      // Get main config path
-      const mainConfigPath = await getMainConfigPath();
+      // Resolve a newly selected location directly. Keep the current bootstrap
+      // pointer intact until its main config has been saved successfully.
+      const mainConfigPath = settings.storeDirectory
+        ? join(settings.storeDirectory, 'config.json')
+        : await getMainConfigPath();
       if (mainConfigPath) {
         // Ensure the directory exists
         const configDir = join(mainConfigPath, '..');
@@ -47,6 +41,15 @@ export function registerSettingsHandlers(): void {
         // Save all settings to main config file (excluding storeDirectory as it's in bootstrap)
         const { storeDirectory, ...mainSettings } = settings;
         await writeFile(mainConfigPath, JSON.stringify(mainSettings, null, 2), 'utf-8');
+
+        // Switch the bootstrap pointer only after the selected config is written.
+        if (storeDirectory) {
+          await writeFile(
+            BOOTSTRAP_CONFIG_FILE,
+            JSON.stringify({ storeDirectory }, null, 2),
+            'utf-8'
+          );
+        }
       } else {
         // If no storeDirectory set yet, save to bootstrap for now
         await writeFile(
