@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useId, useState, useEffect } from 'react';
 import { ChevronUp, ChevronDown, Sparkles, CheckCircle } from 'lucide-react';
 import { UploadedVideo } from '../../types/chat';
 import { VideoPreviewCard } from './VideoPreviewCard';
@@ -24,6 +24,7 @@ export const VideoSelectionBar: React.FC<VideoSelectionBarProps> = ({
   analysisCompleted = false,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const contentId = useId();
 
   // Auto-collapse when analysis starts, but allow manual expansion during analysis
   useEffect(() => {
@@ -80,7 +81,10 @@ export const VideoSelectionBar: React.FC<VideoSelectionBarProps> = ({
       <div className="flex items-center justify-between px-6 py-3 bg-gray-50 border-b border-gray-100 rounded-t-lg">
         <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={toggleExpanded}
+            aria-expanded={isExpanded}
+            aria-controls={contentId}
             className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
           >
             {isExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
@@ -111,9 +115,7 @@ export const VideoSelectionBar: React.FC<VideoSelectionBarProps> = ({
       </div>
 
       {/* Content */}
-      <div className={`overflow-hidden transition-all duration-300 ${
-        isExpanded ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'
-      }`}>
+      <div id={contentId} hidden={!isExpanded}>
         <div className="p-4">
           <div className="flex gap-4 overflow-x-auto pb-2">
             {videos.map((video) => (
