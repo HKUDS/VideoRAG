@@ -95,7 +95,7 @@ export function registerFileHandlers(): void {
         for (const filePath of result.filePaths) {
           try {
             const stats = await stat(filePath);
-            const fileName = filePath.split('/').pop() || filePath.split('\\').pop() || 'unknown';
+            const fileName = basename(filePath);
             
             files.push({
               name: fileName,
