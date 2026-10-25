@@ -5,6 +5,7 @@ interface ToggleSwitchProps {
   onChange: (checked: boolean) => void
   disabled?: boolean
   label?: string
+  ariaLabel: string
   size?: 'sm' | 'md' | 'lg'
 }
 
@@ -13,6 +14,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   onChange,
   disabled = false,
   label,
+  ariaLabel,
   size = 'md'
 }) => {
   const sizes = {
@@ -46,6 +48,9 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
         type="button"
         onClick={() => !disabled && onChange(!checked)}
         disabled={disabled}
+        role="switch"
+        aria-checked={checked}
+        aria-label={ariaLabel}
         className={`
           relative inline-flex ${currentSize.container} items-center rounded-full 
           transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2

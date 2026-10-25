@@ -485,10 +485,11 @@ export function AppSidebar() {
             <div className="flex items-center space-x-2">
               <Server size={16} className={`${serviceState.imagebindLoaded ? 'text-green-500' : 'text-gray-400'}`} />
               <span className="text-sm font-medium">
-                Vimo Service
+                ImageBind model
               </span>
             </div>
             <ToggleSwitch
+              ariaLabel="ImageBind model"
               checked={serviceState.imagebindLoaded}
               onChange={async (checked) => {
                 if (checked) {
