@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { Message, UploadedVideo, VideoAnalysisState, AnalysisStep } from '../types/chat';
 import {
@@ -8,6 +8,7 @@ import {
   generateMessageId,
   generateChatId,
 } from '../utils/chat';
+import { applyIfCurrent } from '../utils/apply-if-current';
 import { useVideoRAG } from './useVideoRAG';
 import { useChatSessionContext } from '../contexts/ChatSessionContext';
 
@@ -40,18 +41,28 @@ export const useChat = () => {
 
   // Intelligent polling management
   const [activePolling, setActivePolling] = useState<NodeJS.Timeout | null>(null);
+  const latestMessagesRequest = useRef(0);
+  const currentChatId = useRef(chatId);
+  currentChatId.current = chatId;
 
-
+  const loadMessagesForChat = useCallback(async (requestedChatId: string) => {
+    if (currentChatId.current !== requestedChatId) return;
+    const requestId = ++latestMessagesRequest.current;
+    await applyIfCurrent(
+      loadMessages(requestedChatId),
+      () =>
+        latestMessagesRequest.current === requestId &&
+        currentChatId.current === requestedChatId,
+      setMessages,
+    );
+  }, []);
 
   // Load chat messages and session info
   useEffect(() => {
     if (!chatId || sessionInfo.isLoading) return;
 
     // Load messages directly from file system
-    const loadChatMessages = async () => {
-      const messages = await loadMessages(chatId);
-      setMessages(messages);
-    };
+    const loadChatMessages = () => loadMessagesForChat(chatId);
 
     // Load video state from JSON file to memory - remove sessionInfo.sessions dependency
     const loadVideoStateFromJSON = async () => {
@@ -99,7 +110,7 @@ export const useChat = () => {
       loadChatMessages(),
       loadVideoStateFromJSON()
     ]);
-  }, [chatId, sessionInfo.isLoading]); // Remove sessionInfo.sessions dependency
+  }, [chatId, sessionInfo.isLoading, loadMessagesForChat]); // Remove sessionInfo.sessions dependency
 
   // Listen for chat messages updates
   useEffect(() => {
@@ -107,10 +118,7 @@ export const useChat = () => {
       const { chatId: updatedChatId } = event.detail;
       if (updatedChatId && updatedChatId === chatId) {
         // Reload messages from file system to refresh interface
-        const reloadMessages = async () => {
-          const messages = await loadMessages(updatedChatId);
-          setMessages(messages);
-        };
+        const reloadMessages = () => loadMessagesForChat(updatedChatId);
         reloadMessages();
       }
     };
@@ -119,10 +127,7 @@ export const useChat = () => {
       const { chatId: reloadChatId } = event.detail;
       if (reloadChatId && reloadChatId === chatId) {
         // Reload messages from file system
-        const reloadMessages = async () => {
-          const messages = await loadMessages(reloadChatId);
-          setMessages(messages);
-        };
+        const reloadMessages = () => loadMessagesForChat(reloadChatId);
         reloadMessages();
       }
     };
@@ -148,7 +153,7 @@ export const useChat = () => {
       window.removeEventListener('force-reload-chat', handleForceReload as EventListener);
       window.removeEventListener('session-deleted', handleSessionDeleted as EventListener);
     };
-  }, [chatId, sessionInfo, activePolling]);
+  }, [chatId, sessionInfo, activePolling, loadMessagesForChat]);
 
   // Clean up polling
   useEffect(() => {

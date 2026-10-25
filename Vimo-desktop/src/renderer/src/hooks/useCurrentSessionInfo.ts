@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { createLatestRequestGuard } from '../lib/latest-request';
 import { ChatSessionInfo } from '../types/chat';
 
 interface UseCurrentSessionInfoReturn {
@@ -12,9 +13,11 @@ export const useCurrentSessionInfo = (chatId: string | undefined): UseCurrentSes
   const [sessionInfo, setSessionInfo] = useState<ChatSessionInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requestGuard = useRef(createLatestRequestGuard());
 
   // Load current session info directly from JSON file
   const loadCurrentSessionInfo = useCallback(async (sessionId: string) => {
+    const requestId = requestGuard.current.begin();
     if (!sessionId || sessionId === 'new') {
       setSessionInfo(null);
       setIsLoading(false);
@@ -26,6 +29,7 @@ export const useCurrentSessionInfo = (chatId: string | undefined): UseCurrentSes
       setError(null);
       
       const result = await window.api.chatSessions.load(sessionId);
+      if (!requestGuard.current.isCurrent(requestId)) return;
       
       if (result.success && result.session) {
         const sessionWithDates: ChatSessionInfo = {
@@ -38,11 +42,12 @@ export const useCurrentSessionInfo = (chatId: string | undefined): UseCurrentSes
         setSessionInfo(null);
       }
     } catch (err) {
+      if (!requestGuard.current.isCurrent(requestId)) return;
       console.error('Failed to load current session info:', err);
       setError(err instanceof Error ? err.message : 'Unknown error');
       setSessionInfo(null);
     } finally {
-      setIsLoading(false);
+      if (requestGuard.current.isCurrent(requestId)) setIsLoading(false);
     }
   }, []);
 
@@ -58,9 +63,12 @@ export const useCurrentSessionInfo = (chatId: string | undefined): UseCurrentSes
     if (chatId) {
       loadCurrentSessionInfo(chatId);
     } else {
+      requestGuard.current.invalidate();
       setSessionInfo(null);
       setIsLoading(false);
     }
+
+    return () => requestGuard.current.invalidate();
   }, [chatId, loadCurrentSessionInfo]);
 
   // Listen for session update events
