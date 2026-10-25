@@ -19,7 +19,7 @@ export const useVideoUpload = ({ uploadedVideos, setUploadedVideos, onShowToast 
         const duplicateFiles: string[] = [];
         
         for (const file of result.files) {
-          // Check if the video already exists with the same path
+          // Check already visible selections; the state update below also checks current state.
           const isDuplicate = uploadedVideos.some(video => video.path === file.path);
           
           if (isDuplicate) {
@@ -43,7 +43,15 @@ export const useVideoUpload = ({ uploadedVideos, setUploadedVideos, onShowToast 
 
         // Add new videos
         if (newVideos.length > 0) {
-          setUploadedVideos((prev) => [...prev, ...newVideos]);
+          setUploadedVideos((prev) => {
+            const currentPaths = new Set(prev.map(video => video.path));
+            const uniqueVideos = newVideos.filter(video => {
+              if (currentPaths.has(video.path)) return false;
+              currentPaths.add(video.path);
+              return true;
+            });
+            return uniqueVideos.length > 0 ? [...prev, ...uniqueVideos] : prev;
+          });
         }
 
         // If there are duplicate files, show a prompt
@@ -60,7 +68,7 @@ export const useVideoUpload = ({ uploadedVideos, setUploadedVideos, onShowToast 
     } catch (error) {
       console.error('Error selecting video files:', error);
     }
-  }, [uploadedVideos, setUploadedVideos]);
+  }, [uploadedVideos, setUploadedVideos, onShowToast]);
 
   // Keep compatibility with drag and drop upload - currently not supported
   const handleVideoUploadFromFiles = useCallback(async () => {
