@@ -1,11 +1,11 @@
 import re
-import json
 import openai
 import asyncio
 import tiktoken
 from typing import Union
 from collections import Counter, defaultdict
 from ._splitter import SeparatorSplitter
+from ._multiple_choice import request_multiple_choice_response
 from ._utils import (
     logger,
     clean_str,
@@ -906,21 +906,16 @@ async def videorag_query_multiple_choice(
         chunk_data=retreived_chunk_context,
         response_type=query_param.response_type
     )
-    response = await use_model_func(
+    def log_invalid_response(error, attempt, max_attempts):
+        action = "Retrying..." if attempt < max_attempts else "No further retries."
+        logger.info(
+            f"Response is not valid JSON for query {query}. Found {error}. {action}"
+        )
+
+    return await request_multiple_choice_response(
         query,
-        system_prompt=sys_prompt,
-        use_cache=False,
+        sys_prompt,
+        use_model_func,
+        on_invalid_response=log_invalid_response,
     )
-    while True:
-        try:
-            json_response = json.loads(response)
-            assert "Answer" in json_response and "Explanation" in json_response
-            return json_response
-        except Exception as e:
-            logger.info(f"Response is not valid JSON for query {query}. Found {e}. Retrying...")
-            response = await use_model_func(
-                query,
-                system_prompt=sys_prompt,
-                use_cache=False,
-            )
     
