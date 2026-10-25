@@ -238,7 +238,7 @@ export function useVideoRAG(): UseVideoRAGReturn {
   // Poll processing videos status
   useEffect(() => {
     processingVideos.forEach(videoName => {
-      if (!videoStatus[videoName] || videoStatus[videoName].status === 'processing') {
+      if (!videoStatus[videoName]) {
         pollVideoStatus(videoName)
       }
     })
