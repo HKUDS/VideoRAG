@@ -1,5 +1,5 @@
 import os
-os.environ["OPENAI_API_KEY"] = ""
+os.environ.setdefault("OPENAI_API_KEY", "")
 import time
 import json
 import threading

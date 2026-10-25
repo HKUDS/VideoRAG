@@ -16,7 +16,7 @@ args = parser.parse_args()
 sub_category = args.collection
 
 os.environ["CUDA_VISIBLE_DEVICES"] = args.cuda
-os.environ["OPENAI_API_KEY"] = ""
+os.environ.setdefault("OPENAI_API_KEY", "")
 
 from videorag._llm import *
 from videorag.videorag import VideoRAG, QueryParam

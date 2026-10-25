@@ -1,4 +1,3 @@
-import os
 import logging
 import warnings
 import multiprocessing
@@ -6,9 +5,7 @@ import multiprocessing
 warnings.filterwarnings("ignore")
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
-# 设置DeepSeek和硅基流动的API密钥
-os.environ["DEEPSEEK_API_KEY"] = "sk-*******"
-os.environ["SILICONFLOW_API_KEY"] = "sk-******"
+# 运行前通过环境变量设置 DEEPSEEK_API_KEY 和 SILICONFLOW_API_KEY。
 
 from videorag._llm import deepseek_bge_config
 from videorag import VideoRAG, QueryParam
