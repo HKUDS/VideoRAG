@@ -1,5 +1,6 @@
 import { dialog, ipcMain } from 'electron';
 import { readFile, writeFile, stat } from 'node:fs/promises';
+import { basename } from 'node:path';
 
 /**
  * Register all file-related IPC handlers
@@ -95,7 +96,7 @@ export function registerFileHandlers(): void {
         for (const filePath of result.filePaths) {
           try {
             const stats = await stat(filePath);
-            const fileName = filePath.split('/').pop() || filePath.split('\\').pop() || 'unknown';
+            const fileName = basename(filePath);
             
             files.push({
               name: fileName,
