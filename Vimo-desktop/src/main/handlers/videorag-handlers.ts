@@ -15,6 +15,10 @@ function updateAPIBaseURL(port: number) {
 // Python backend process management
 let pythonProcess: ChildProcess | null = null
 
+function isVideoRAGProcessActive(process: ChildProcess | null): process is ChildProcess {
+  return process !== null && process.exitCode === null && process.signalCode === null
+}
+
 // Port configuration
 const PORT_RANGE_START = 64451
 const PORT_RANGE_END = 64470
@@ -119,15 +123,18 @@ export function startVideoRAGService(): Promise<boolean> {
           return
         }
 
-        pythonProcess.on('close', (code) => {
+        const processToWatch = pythonProcess
+        processToWatch.on('close', (code) => {
           console.log(`VideoRAG API process exited with code ${code}`)
-          pythonProcess = null
+          if (pythonProcess === processToWatch) {
+            pythonProcess = null
+          }
           if (!resolved) {
             safeReject(new Error(`VideoRAG process exited with code ${code}`))
           }
         })
 
-        pythonProcess.on('error', (error) => {
+        processToWatch.on('error', (error) => {
           console.error(`Python process error:`, error)
           if (!resolved) {
             safeReject(error)
@@ -182,12 +189,20 @@ export function startVideoRAGService(): Promise<boolean> {
   })
 }
 
-// Stop Python backend service
-export function stopVideoRAGService() {
-  if (pythonProcess && !pythonProcess.killed) {
-    pythonProcess.kill()
-    pythonProcess = null
+// Stop Python backend service; retain the process reference until its close event.
+export function stopVideoRAGService(): boolean {
+  const processToStop = pythonProcess
+  if (!processToStop) return true
+
+  if (!isVideoRAGProcessActive(processToStop)) {
+    if (pythonProcess === processToStop) {
+      pythonProcess = null
+    }
+    return true
   }
+
+  if (processToStop.killed) return true
+  return processToStop.kill()
 }
 
 // API call helper function - supports asynchronous operations
@@ -447,9 +462,14 @@ export function setupVideoRAGHandlers() {
     try {
       const isDev = process.env.NODE_ENV === 'development'
       
-      // Production mode: check if already running first
-      if (!isDev && pythonProcess && !pythonProcess.killed) {
-        return { success: true, message: 'Service is already running' }
+      // Keep the current child tracked until it exits; a sent kill signal does not mean it closed.
+      if (!isDev && pythonProcess) {
+        if (isVideoRAGProcessActive(pythonProcess)) {
+          return pythonProcess.killed
+            ? { success: false, error: 'VideoRAG service is still stopping' }
+            : { success: true, message: 'Service is already running' }
+        }
+        pythonProcess = null
       }
       
       // Both dev and production: start service (dev will skip actual startup but scan for existing)
@@ -486,8 +506,17 @@ export function setupVideoRAGHandlers() {
         }
       }
       
-      // Production mode: actually stop the service
-      stopVideoRAGService()
+      // Production mode: report whether a stop signal was sent; the child remains tracked until close.
+      const processToStop = pythonProcess
+      const stopRequested = stopVideoRAGService()
+      if (!stopRequested) {
+        return { success: false, error: 'Failed to send a stop signal to the VideoRAG process' }
+      }
+      if (processToStop && isVideoRAGProcessActive(processToStop)) {
+        await new Promise<void>((resolve) => {
+          processToStop.once('close', () => resolve())
+        })
+      }
       return { success: true, message: 'Service stopped successfully' }
     } catch (error: any) {
       return { success: false, error: error.message }
@@ -510,7 +539,7 @@ export function setupVideoRAGHandlers() {
       }
       
       // Production mode: check actual process status
-      const isRunning = pythonProcess && !pythonProcess.killed
+      const isRunning = isVideoRAGProcessActive(pythonProcess)
       return { success: true, isRunning, pythonProcess: isRunning ? 'running' : 'stopped' }
     } catch (error: any) {
       return { success: false, error: error.message }
