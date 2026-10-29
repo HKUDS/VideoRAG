@@ -120,7 +120,7 @@ def chunking_by_video_segments(
     return results
     
     
-def chunking_by_seperators(
+def chunking_by_separators(
     tokens_list: list[list[int]],
     doc_keys,
     tiktoken_model,
