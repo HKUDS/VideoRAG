@@ -1,3 +1,4 @@
+import math
 import os
 import time
 import shutil
@@ -26,8 +27,11 @@ def split_video(
     segment_index2name, segment_times_info = {}, {}
     with VideoFileClip(video_path) as video:
     
-        total_video_length = int(video.duration)
-        start_times = list(range(0, total_video_length, segment_length))
+        total_video_length = video.duration
+        # Preserve integer endpoint names without discarding fractional tails.
+        if int(total_video_length) == total_video_length:
+            total_video_length = int(total_video_length)
+        start_times = list(range(0, math.ceil(total_video_length), segment_length))
         # if the last segment is shorter than 5 seconds, we merged it to the last segment
         if len(start_times) > 1 and (total_video_length - start_times[-1]) < 5:
             start_times = start_times[:-1]
