@@ -58,10 +58,12 @@ class HNSWVectorStorage(BaseVectorStorage):
                 ef_construction=self.ef_construction,
                 M=self.M,
             )
-            self._index.set_ef(self.ef_search)
             self._metadata = {}
             self._current_elements = 0
             logger.info(f"Created new index for {self.namespace}")
+
+        # HNSW does not persist ef in save_index/load_index.
+        self._index.set_ef(self.ef_search)
 
     async def upsert(self, data: dict[str, dict]) -> np.ndarray:
         logger.info(f"Inserting {len(data)} vectors to {self.namespace}")
