@@ -342,6 +342,7 @@ class VideoRAG:
                 segment_index2name,
                 self.audio_output_format,
                 self.safe_config,  # Pass global config dict
+                segment_times_info=segment_times_info,
             )
             
             # Step3: saving video segments **as well as** obtain caption with vision language model

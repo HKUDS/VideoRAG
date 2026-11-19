@@ -120,7 +120,7 @@ async def speech_to_text_async(video_name, working_dir, segment_index2name, audi
         video_name, working_dir, segment_index2name, audio_output_format, global_config
     )
 
-def speech_to_text(video_name, working_dir, segment_index2name, audio_output_format, global_config):
+def speech_to_text(video_name, working_dir, segment_index2name, audio_output_format, global_config, *, segment_times_info=None):
     """
     Synchronous wrapper for async speech-to-text function
     
@@ -130,7 +130,19 @@ def speech_to_text(video_name, working_dir, segment_index2name, audio_output_for
         segment_index2name: Mapping of segment indices to names
         audio_output_format: Audio file format
         global_config: Global configuration dictionary containing API keys and settings
+        segment_times_info: Optional splitter metadata identifying segments without an audio track
     """
+    # Missing audio files or unknown metadata are not proof of a trackless clip.
+    transcripts = {
+        index: ""
+        for index in segment_index2name
+        if segment_times_info is not None and segment_times_info.get(index, {}).get("has_audio") is False
+    }
+    if transcripts:
+        segment_index2name = {index: name for index, name in segment_index2name.items() if index not in transcripts}
+        if not segment_index2name:
+            return transcripts
+
     # Run the async function in an event loop
     try:
         loop = asyncio.get_event_loop()
@@ -138,6 +150,8 @@ def speech_to_text(video_name, working_dir, segment_index2name, audio_output_for
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
     
-    return loop.run_until_complete(
+    recognized = loop.run_until_complete(
         speech_to_text_async(video_name, working_dir, segment_index2name, audio_output_format, global_config)
     )
+    transcripts.update(recognized)
+    return transcripts

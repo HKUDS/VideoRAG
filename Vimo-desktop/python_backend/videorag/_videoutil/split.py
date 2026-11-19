@@ -42,23 +42,24 @@ def split_video(
             subvideo_length = subvideo.duration
             frame_times = np.linspace(0, subvideo_length, num_frames_per_segment, endpoint=False)
             frame_times += start
+            subaudio = subvideo.audio
             
             segment_index2name[f"{segment_index}"] = f"{unique_timestamp}-{segment_index}-{start}-{end}"
-            segment_times_info[f"{segment_index}"] = {"frame_times": frame_times, "timestamp": (start, end)}
+            segment_times_info[f"{segment_index}"] = {
+                "frame_times": frame_times, "timestamp": (start, end), "has_audio": subaudio is not None,
+            }
             
-            # save audio
-            audio_file_base_name = segment_index2name[f"{segment_index}"]
-            audio_file = f'{audio_file_base_name}.{audio_output_format}'
-            subaudio = subvideo.audio
-            # Convert to mono and set sample rate using ffmpeg parameters
-            subaudio.write_audiofile(
-                os.path.join(video_segment_cache_path, audio_file), 
-                codec='mp3',
-                fps=audio_sample_rate,  # Set sample rate
-                ffmpeg_params=['-ac', '1'],  # Force mono (1 audio channel)
-                verbose=False, 
-                logger=None
-            )
+            if subaudio is not None:
+                audio_file = f'{segment_index2name[str(segment_index)]}.{audio_output_format}'
+                # Convert to mono and set sample rate using ffmpeg parameters.
+                subaudio.write_audiofile(
+                    os.path.join(video_segment_cache_path, audio_file),
+                    codec='mp3',
+                    fps=audio_sample_rate,
+                    ffmpeg_params=['-ac', '1'],
+                    verbose=False,
+                    logger=None,
+                )
             
             segment_index += 1
 
