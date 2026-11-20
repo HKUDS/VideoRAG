@@ -22,11 +22,11 @@ def download_result(result_files, base_dir):
         with open(f"batch_requests/{base_dir}/{_file}.temp", "wb") as f:
             f.write(content)
         results = []
-        with open(f"batch_requests/{base_dir}/{_file}.temp", 'r') as f:
+        with open(f"batch_requests/{base_dir}/{_file}.temp", 'r', encoding='utf-8') as f:
             for line in tqdm(f):
                 json_object = json.loads(line.strip())
                 results.append(json_object)
-        with open(f"batch_requests/{base_dir}/{_file}.json", "w") as json_file:
+        with open(f"batch_requests/{base_dir}/{_file}.json", "w", encoding='utf-8') as json_file:
             json.dump(results, json_file, indent=4)
         os.remove(f"batch_requests/{base_dir}/{_file}.temp")
 

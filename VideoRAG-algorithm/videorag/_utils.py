@@ -187,9 +187,10 @@ def limit_async_func_call(max_size: int, waitting_time: float = 0.0001):
             while __current_size >= max_size:
                 await asyncio.sleep(waitting_time)
             __current_size += 1
-            result = await func(*args, **kwargs)
-            __current_size -= 1
-            return result
+            try:
+                return await func(*args, **kwargs)
+            finally:
+                __current_size -= 1
 
         return wait_func
 

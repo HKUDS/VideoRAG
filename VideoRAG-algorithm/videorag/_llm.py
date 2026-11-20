@@ -323,11 +323,19 @@ async def ollama_complete_if_cache(
         if if_cache_return is not None and if_cache_return["return"] is not None:
             return if_cache_return["return"]
 
-    # Send the request to Ollama
-    response = await ollama_client.chat(
-        model=model,
-        messages=messages
-    )
+    # Send generation settings through Ollama's options object.
+    ollama_options = dict(kwargs.pop("options", {}) or {})
+    max_tokens = kwargs.pop("max_tokens", None)
+    temperature = kwargs.pop("temperature", None)
+    if max_tokens is not None:
+        ollama_options["num_predict"] = max_tokens
+    if temperature is not None:
+        ollama_options["temperature"] = temperature
+
+    chat_kwargs = {"model": model, "messages": messages}
+    if ollama_options:
+        chat_kwargs["options"] = ollama_options
+    response = await ollama_client.chat(**chat_kwargs)
     # print(messages)
     # print(response['message']['content'])
 
@@ -346,7 +354,8 @@ async def ollama_complete(model_name, prompt, system_prompt=None, history_messag
         model_name,
         prompt,
         system_prompt=system_prompt,
-        history_messages=history_messages
+        history_messages=history_messages,
+        **kwargs,
     )
 
 async def ollama_mini_complete(model_name, prompt, system_prompt=None, history_messages=[], **kwargs) -> str:
@@ -355,7 +364,8 @@ async def ollama_mini_complete(model_name, prompt, system_prompt=None, history_m
         model_name,
         prompt,
         system_prompt=system_prompt,
-        history_messages=history_messages
+        history_messages=history_messages,
+        **kwargs,
     )
 
 @retry(

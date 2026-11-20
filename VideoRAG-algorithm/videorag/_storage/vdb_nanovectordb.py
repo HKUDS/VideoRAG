@@ -91,13 +91,13 @@ class NanoVectorDBVideoSegmentStorage(BaseVectorStorage):
         )
     
     async def upsert(self, video_name, segment_index2name, video_output_format):
-        embedder = imagebind_model.imagebind_huge(pretrained=True).cuda()
-        embedder.eval()
-        
         logger.info(f"Inserting {len(segment_index2name)} segments to {self.namespace}")
         if not len(segment_index2name):
             logger.warning("You insert an empty data to vector DB")
             return []
+
+        embedder = imagebind_model.imagebind_huge(pretrained=True).cuda()
+        embedder.eval()
         list_data, video_paths = [], []
         cache_path = os.path.join(self.global_config["working_dir"], '_cache', video_name)
         index_list = list(segment_index2name.keys())

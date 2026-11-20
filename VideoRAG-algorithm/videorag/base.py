@@ -14,7 +14,7 @@ class QueryParam:
     level: int = 2
     top_k: int = 20
     # naive search
-    naive_max_token_for_text_unit = 12000
+    naive_max_token_for_text_unit: int = 12000
     # videorag search
     only_need_context: bool = False
 
