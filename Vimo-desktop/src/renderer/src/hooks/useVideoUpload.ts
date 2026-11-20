@@ -19,7 +19,7 @@ export const useVideoUpload = ({ uploadedVideos, setUploadedVideos, onShowToast 
         const duplicateFiles: string[] = [];
         
         for (const file of result.files) {
-          // Check if the video already exists with the same path
+          // Check already visible selections; the state update below also checks current state.
           const isDuplicate = uploadedVideos.some(video => video.path === file.path);
           
           if (isDuplicate) {

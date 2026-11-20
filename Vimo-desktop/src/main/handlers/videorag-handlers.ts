@@ -154,9 +154,9 @@ export function startVideoRAGService(): Promise<boolean> {
               updateAPIBaseURL(foundPort)
               initializeVideoRAGConfig()
                 .then(() => safeResolve(true))
-                .catch(() => {
-                  console.error('Configuration initialization failed, but service is running')
-                  safeResolve(true) // Service started, even if configuration fails
+                .catch((error) => {
+                  console.error('VideoRAG configuration initialization failed', error)
+                  safeReject(error instanceof Error ? error : new Error(String(error)))
                 })
               return
             }
@@ -486,8 +486,17 @@ export function setupVideoRAGHandlers() {
         }
       }
       
-      // Production mode: actually stop the service
-      stopVideoRAGService()
+      // Production mode: report whether a stop signal was sent; the child remains tracked until close.
+      const processToStop = pythonProcess
+      const stopRequested = stopVideoRAGService()
+      if (!stopRequested) {
+        return { success: false, error: 'Failed to send a stop signal to the VideoRAG process' }
+      }
+      if (processToStop && isVideoRAGProcessActive(processToStop)) {
+        await new Promise<void>((resolve) => {
+          processToStop.once('close', () => resolve())
+        })
+      }
       return { success: true, message: 'Service stopped successfully' }
     } catch (error: any) {
       return { success: false, error: error.message }

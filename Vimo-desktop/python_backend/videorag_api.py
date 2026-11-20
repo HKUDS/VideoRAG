@@ -429,36 +429,53 @@ class VideoRAGProcessManager:
             raise
             
     def terminate_process(self, chat_id):
-        """Terminate process"""
+        """Terminate every tracked process associated with a session."""
         terminated = []
-        
-        if chat_id in self.running_processes:
+        status_types = []
+        processes = [
+            (process_key, process_info)
+            for process_key, process_info in self.running_processes.items()
+            if process_info.get("chat_id") == chat_id
+        ]
+
+        for process_key, process_info in processes:
             try:
-                process_info = self.running_processes[chat_id]
-                if process_info["process"].is_alive():
-                    log_to_file(f"🔥 Terminating process: {chat_id}")
-                    process_info["process"].terminate()
-                    process_info["process"].join(timeout=5)
-                    
-                    if process_info["process"].is_alive():
-                        log_to_file(f"💀 Force killing process: {chat_id}")
-                        process_info["process"].kill()
-                        process_info["process"].join()
-                        
-                terminated.append(chat_id)
-                del self.running_processes[chat_id]
+                process = process_info["process"]
+                if process.is_alive():
+                    log_to_file(f"🔥 Terminating process: {process_key}")
+                    process.terminate()
+                    process.join(timeout=5)
+
+                    if process.is_alive():
+                        log_to_file(f"💀 Force killing process: {process_key}")
+                        process.kill()
+                        process.join()
+
+                terminated.append(process_key)
+                del self.running_processes[process_key]
+                status_type = (
+                    "query_status"
+                    if process_info.get("type") == "query_processing"
+                    else "indexing_status"
+                )
+                if status_type not in status_types:
+                    status_types.append(status_type)
             except Exception as e:
-                log_to_file(f"⚠️ Process termination failed {chat_id}: {str(e)}")
-        
-        # Update status file
+                log_to_file(f"⚠️ Process termination failed {process_key}: {str(e)}")
+
+        # Update the status for each kind of process that was removed.
         if self.global_config:
+            if not processes:
+                # Preserve the existing behavior for a session with no tracked process.
+                status_types.append("indexing_status")
             base_storage_path = self.global_config.get("base_storage_path")
-            update_session_status(chat_id, base_storage_path, "indexing_status", {
-                "status": "terminated",
-                "message": "Process terminated by user",
-                "current_step": "Terminated"
-            })
-        
+            for status_type in status_types:
+                update_session_status(chat_id, base_storage_path, status_type, {
+                    "status": "terminated",
+                    "message": "Process terminated by user",
+                    "current_step": "Terminated"
+                })
+
         return terminated
         
     def delete_session(self, chat_id):

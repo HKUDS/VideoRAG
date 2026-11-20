@@ -39,26 +39,6 @@ interface SettingsState {
   imagebindInstalled: boolean;
 }
 
-const Settings = () => {
-  const [settings, setSettings] = useState<SettingsState>({
-    openaiBaseUrl: '',
-    openaiApiKey: '',
-    processingModel: 'gpt-4o-mini',
-    analysisModel: 'gpt-4o-mini', 
-    dashscopeApiKey: '',
-    captionModel: 'qwen-vl-plus-latest',
-    asrModel: 'paraformer-realtime-v2',
-    storeDirectory: '',
-    imagebindInstalled: false,
-  });
-
-  const [apiConfigStatus, setApiConfigStatus] = useState<
-    'idle' | 'saving' | 'saved' | 'error'
-  >('idle');
-
-
-
-// Model Status Section Component
 const ModelStatusSection = ({ storeDirectory }: { storeDirectory: string }) => {
   const [modelStatus, setModelStatus] = useState<{
     imagebind: boolean;
@@ -147,6 +127,23 @@ const ModelStatusSection = ({ storeDirectory }: { storeDirectory: string }) => {
     </div>
   );
 };
+
+const Settings = () => {
+  const [settings, setSettings] = useState<SettingsState>({
+    openaiBaseUrl: '',
+    openaiApiKey: '',
+    processingModel: 'gpt-4o-mini',
+    analysisModel: 'gpt-4o-mini',
+    dashscopeApiKey: '',
+    captionModel: 'qwen-vl-plus-latest',
+    asrModel: 'paraformer-realtime-v2',
+    storeDirectory: '',
+    imagebindInstalled: false,
+  });
+
+  const [apiConfigStatus, setApiConfigStatus] = useState<
+    'idle' | 'saving' | 'saved' | 'error'
+  >('idle');
 
 
 

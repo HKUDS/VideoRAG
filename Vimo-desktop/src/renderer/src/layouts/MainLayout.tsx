@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Outlet } from 'react-router';
 import { AppSidebar } from '../components/sidebar/app-sidebar';
 import { SidebarInset, SidebarProvider } from '../components/ui/sidebar';
-import { useVideoRAGService } from '../hooks/useVideoRAGService';
+import { useServiceContext } from '../contexts/ServiceContext';
 
 // Liquid glass loading overlay component
 const ServiceLoadingOverlay = ({ show }: { show: boolean }) => {
@@ -49,7 +49,7 @@ const ServiceLoadingOverlay = ({ show }: { show: boolean }) => {
 };
 
 export function MainLayout() {
-  const { startService, loading } = useVideoRAGService();
+  const { startService, loading } = useServiceContext();
   const [isInitializing, setIsInitializing] = useState(true);
   const hasInitializedRef = useRef(false);
 

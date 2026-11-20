@@ -78,7 +78,7 @@ function registerModelHandlers(): void {
   ipcMain.handle('download-imagebind', async (event, storeDirectory: string) => {
     try {
       const https = require('https');
-      const { createWriteStream, mkdirSync, existsSync } = require('fs');
+      const { createWriteStream, mkdirSync, existsSync, renameSync, rmSync } = require('fs');
       const { access } = require('fs/promises');
 
       // Create directory if it doesn't exist
@@ -93,6 +93,7 @@ function registerModelHandlers(): void {
       }
 
       const imagebindPath = join(imagebindDir, 'imagebind_huge.pth');
+      const downloadPath = `${imagebindPath}.download`;
 
       // Check if file already exists
       try {
@@ -105,23 +106,40 @@ function registerModelHandlers(): void {
       const url = 'https://dl.fbaipublicfiles.com/imagebind/imagebind_huge.pth';
 
       return new Promise((resolve) => {
-        const file = createWriteStream(imagebindPath);
+        const file = createWriteStream(downloadPath);
         let downloadedBytes = 0;
         let totalBytes = 0;
+        let settled = false;
+
+        const cleanupDownload = () => {
+          try {
+            rmSync(downloadPath, { force: true });
+          } catch (cleanupError) {
+            console.error('Failed to cleanup partial ImageBind download:', cleanupError);
+          }
+        };
+
+        const failDownload = (message: string) => {
+          if (settled) return;
+          settled = true;
+          file.destroy();
+          file.close(() => {
+            cleanupDownload();
+            resolve({ success: false, error: message });
+          });
+        };
+
+        file.on('error', (err) => failDownload(err.message));
 
         const request = https.get(url, (response) => {
           if (response.statusCode !== 200) {
-            // Delete the entire imagebind_huge directory on HTTP error
-            const { rmSync } = require('fs');
-            try {
-              rmSync(imagebindDir, { recursive: true, force: true });
-            } catch (cleanupError) {
-              console.error('Failed to cleanup imagebind directory:', cleanupError);
-            }
-            resolve({ success: false, error: `HTTP ${response.statusCode}: ${response.statusMessage}` });
+            response.resume();
+            failDownload(`HTTP ${response.statusCode}: ${response.statusMessage}`);
             return;
           }
 
+          response.on('error', (err) => failDownload(err.message));
+          response.on('aborted', () => failDownload('Download interrupted'));
           totalBytes = parseInt(response.headers['content-length'] || '0', 10);
 
           response.on('data', (chunk) => {
@@ -138,46 +156,36 @@ function registerModelHandlers(): void {
           });
 
           response.pipe(file);
+        });
 
-          file.on('finish', () => {
-            file.close();
-            resolve({ success: true, message: 'ImageBind download completed' });
-          });
+        request.on('error', (err) => failDownload(err.message));
 
-          file.on('error', (err) => {
-            file.close();
-            // Delete the entire imagebind_huge directory on error
-            const { rmSync } = require('fs');
-            try {
-              rmSync(imagebindDir, { recursive: true, force: true });
-            } catch (cleanupError) {
-              console.error('Failed to cleanup imagebind directory:', cleanupError);
+        request.setTimeout(300000, () => {
+          request.destroy(new Error('Download timeout'));
+        });
+
+        file.on('finish', () => {
+          if (settled) return;
+          file.close((error) => {
+            if (settled) return;
+            if (error) {
+              settled = true;
+              cleanupDownload();
+              resolve({ success: false, error: error.message });
+              return;
             }
-            resolve({ success: false, error: err.message });
+
+            try {
+              renameSync(downloadPath, imagebindPath);
+              settled = true;
+              resolve({ success: true, message: 'ImageBind download completed' });
+            } catch (error) {
+              settled = true;
+              cleanupDownload();
+              const errorMessage = error instanceof Error ? error.message : 'Failed to finalize ImageBind download';
+              resolve({ success: false, error: errorMessage });
+            }
           });
-        });
-
-        request.on('error', (err) => {
-          // Delete the entire imagebind_huge directory on error
-          const { rmSync } = require('fs');
-          try {
-            rmSync(imagebindDir, { recursive: true, force: true });
-          } catch (cleanupError) {
-            console.error('Failed to cleanup imagebind directory:', cleanupError);
-          }
-          resolve({ success: false, error: err.message });
-        });
-
-        request.setTimeout(300000, () => { // 5 minute timeout
-          request.destroy();
-          // Delete the entire imagebind_huge directory on timeout
-          const { rmSync } = require('fs');
-          try {
-            rmSync(imagebindDir, { recursive: true, force: true });
-          } catch (cleanupError) {
-            console.error('Failed to cleanup imagebind directory:', cleanupError);
-          }
-          resolve({ success: false, error: 'Download timeout' });
         });
       });
 
